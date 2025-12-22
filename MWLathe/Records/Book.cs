@@ -6,6 +6,7 @@ namespace MWLathe.Records
 {
     public class BOOK : Record
     {
+        public static bool replaceBookText = false;
         public string NAME { get; set; }
         public string? MODL { get; set; }
         public string? FNAM { get; set; }
@@ -84,9 +85,12 @@ namespace MWLathe.Records
             {
                 SCRI = newID;
             }
-            if (TEXT is not null)
+            if (replaceBookText)
             {
-                TEXT = Regex.Replace(TEXT, $"""(?:^|(?<=\W)|(?<=\\t)|(?<=(\\r\\n))){oldID}\b""", newID, RegexOptions.IgnoreCase);
+                if (TEXT is not null)
+                {
+                    TEXT = Regex.Replace(TEXT, $"""(?:^|(?<=\W)|(?<=\\t)|(?<=(\\r\\n))){oldID}\b""", newID, RegexOptions.IgnoreCase);
+                }
             }
             if (ENAM is not null && ENAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
             {

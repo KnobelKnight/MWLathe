@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using MWLathe.Helpers;
+﻿using MWLathe.Helpers;
 using MWLathe.Records;
 using System.Diagnostics;
 using System.Text;
@@ -9,31 +7,65 @@ Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 if (args.Length == 0 || args[0] == "-h")
 {
-    Console.WriteLine("MWLathe v1");
+    Console.WriteLine("MWLathe v1.1");
     Console.WriteLine("https://github.com/KnobelKnight/MWLathe");
-    Console.WriteLine("Usage: mwlathe.exe <input.esm/esp> <output.esm/esp> <id_map.csv/tsv>");
+    Console.WriteLine("Usage: mwlathe.exe [-s <separator>] <input.esm/esp> <output.esm/esp> <id_map>");
     Console.WriteLine("For id_map: <old ID>,<new ID>");
     Console.WriteLine("Make sure id_map is headerless and without quotes!");
+    Console.WriteLine("Options:");
+    Console.WriteLine("-s <separator> | Set custom separator for id_map. Mandatory for non-csv/tsv files");
+    Console.WriteLine("-b | Replace IDs within book texts. Useful for ex. PositionCell markers, but unsafe with plaintext IDs");
     Environment.Exit(0);
 }
-else if (args.Length < 3
-    || (!args[0].EndsWith(".esm", StringComparison.OrdinalIgnoreCase) && !args[0].EndsWith(".esp", StringComparison.OrdinalIgnoreCase))
-    || (!args[1].EndsWith(".esm", StringComparison.OrdinalIgnoreCase) && !args[1].EndsWith(".esp", StringComparison.OrdinalIgnoreCase))
-    || !args[2].EndsWith(".csv", StringComparison.OrdinalIgnoreCase) && !args[2].EndsWith(".tsv", StringComparison.OrdinalIgnoreCase))
+
+string? separator = null;
+var fileArgs = new List<string>();
+
+for (int i = 0; i < args.Length; i++)
+{
+    if (args[i] == "-s" && i + 1 < args.Length)
+    {
+        separator = args[i + 1];
+        i++; // Skip the separator value
+    }
+    else if (args[i] == "-b")
+    {
+        BOOK.replaceBookText = true;
+    }
+    else if (!args[i].StartsWith("-"))
+    {
+        fileArgs.Add(args[i]);
+    }
+}
+
+if (fileArgs.Count < 3
+    || (!fileArgs[0].EndsWith(".esm", StringComparison.OrdinalIgnoreCase) && !fileArgs[0].EndsWith(".esp", StringComparison.OrdinalIgnoreCase))
+    || (!fileArgs[1].EndsWith(".esm", StringComparison.OrdinalIgnoreCase) && !fileArgs[1].EndsWith(".esp", StringComparison.OrdinalIgnoreCase)))
 {
     Console.WriteLine("Invalid format or file types. mwlathe.exe -h for help");
     Environment.Exit(1);
 }
 
-var inputPath = Path.Combine(Directory.GetCurrentDirectory(), args[0]);
-var outputPath = Path.Combine(Directory.GetCurrentDirectory(), args[1]);
-var mapPath = Path.Combine(Directory.GetCurrentDirectory(), args[2]);
+var inputPath = Path.Combine(Directory.GetCurrentDirectory(), fileArgs[0]);
+var outputPath = Path.Combine(Directory.GetCurrentDirectory(), fileArgs[1]);
+var mapPath = Path.Combine(Directory.GetCurrentDirectory(), fileArgs[2]);
 
-bool commaSeparated = true;
 
-if (args[2].EndsWith(".tsv", StringComparison.OrdinalIgnoreCase))
+if (separator == null)
 {
-    commaSeparated = false;
+    if (fileArgs[2].EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+    {
+        separator = ",";
+    }
+    else if (fileArgs[2].EndsWith(".tsv", StringComparison.OrdinalIgnoreCase))
+    {
+        separator = "\t";
+    }
+    else
+    {
+        Console.Error.WriteLine($"Aborting: map file must be csv, tsv, or specify a separator");
+        Environment.Exit(2);
+    }
 }
 
 if (inputPath.Equals(outputPath, StringComparison.OrdinalIgnoreCase))
@@ -56,7 +88,7 @@ List<Replacement> Replacements = new List<Replacement>();
 
 foreach (var line in File.ReadLines(mapPath))
 {
-    string[] lineParts = commaSeparated ? line.Split(',') : line.Split('\t');
+    string[] lineParts = line.Split(separator);
     if (lineParts.Length == 1 || lineParts[1] == "")
     {
         Console.Error.WriteLine($"Skipping: no new ID for old ID \"{lineParts[0]}\"");
@@ -84,6 +116,15 @@ if (Replacements.Count == 0)
     Console.Error.WriteLine($"Aborting: no replacement records read from {Path.GetFileName(mapPath)}");
     Environment.Exit(2);
 }
+var newIDList = new List<string>();
+foreach (var idPair in Replacements)
+{
+    if (newIDList.Contains(idPair.OldID))
+    {
+        Console.Error.WriteLine($"Warning: new ID {idPair.OldID} is later replaced by ID {idPair.NewID}. This may lead to unexpected results.");
+    }
+    newIDList.Add(idPair.NewID);
+}
 Console.WriteLine($"Read {Replacements.Count} replacement record(s) from {Path.GetFileName(mapPath)}. Replacing...");
 
 byte[] buffer = new byte[4];
@@ -109,7 +150,7 @@ using (BufferedStream bs = new BufferedStream(fs))
         newRecord.Write(ts);
     }
     sw.Stop();
-    Console.WriteLine($"Output successfully written to {Path.GetFileName(outputPath)} in {sw.ToString()}. If scripts were affected, they will need to be recompiled.");
+    Console.WriteLine($"Output successfully written to {Path.GetFileName(outputPath)} in {sw}. If scripts were affected, they will need to be recompiled.");
 }
 
 static Record IdentifyRecord(string recordType)
