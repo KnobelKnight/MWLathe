@@ -9,7 +9,7 @@ if (args.Length == 0 || args[0] == "-h")
 {
     Console.WriteLine("MWLathe v1.1");
     Console.WriteLine("https://github.com/KnobelKnight/MWLathe");
-    Console.WriteLine("Usage: mwlathe.exe [-s <separator>] <input.esm/esp> <output.esm/esp> <id_map>");
+    Console.WriteLine("Usage: mwlathe.exe <input.esm/esp> <output.esm/esp> <id_map>");
     Console.WriteLine("For id_map: <old ID>,<new ID>");
     Console.WriteLine("Make sure id_map is headerless and without quotes!");
     Console.WriteLine("Options:");
