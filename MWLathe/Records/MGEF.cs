@@ -101,24 +101,12 @@ namespace MWLathe.Records
             }
         }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
-            if (BSND is not null && BSND.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                BSND = newID;
-            }
-            if (CSND is not null && CSND.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                CSND = newID;
-            }
-            if (HSND is not null && HSND.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                HSND = newID;
-            }
-            if (ASND is not null && ASND.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                ASND = newID;
-            }
+            BSND = ReplaceID(BSND, oldID, newID);
+            CSND = ReplaceID(CSND, oldID, newID);
+            HSND = ReplaceID(HSND, oldID, newID);
+            ASND = ReplaceID(ASND, oldID, newID);
         }
 
         public override void CalculateRecordSize()

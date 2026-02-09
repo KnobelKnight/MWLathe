@@ -17,7 +17,7 @@ namespace MWLathe.Helpers
         public byte Idle8 { get; set; }
         public byte Idle9 { get; set; }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
 
         }

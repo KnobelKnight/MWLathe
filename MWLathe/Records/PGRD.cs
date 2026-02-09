@@ -72,7 +72,7 @@ namespace MWLathe.Records
             }
         }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
         }
 

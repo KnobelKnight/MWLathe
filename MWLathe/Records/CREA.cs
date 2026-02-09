@@ -207,7 +207,7 @@ namespace MWLathe.Records
             }
         }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
             if (NAME.Equals(oldID, StringComparison.OrdinalIgnoreCase))
             {
@@ -217,15 +217,11 @@ namespace MWLathe.Records
                     Environment.Exit(3);
                 }
                 NAME = newID;
+                Updated = true;
             }
-            if (CNAM is not null && CNAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                CNAM = newID;
-            }
-            if (SCRI is not null && SCRI.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                SCRI = newID;
-            }
+            CNAM = ReplaceID(CNAM, oldID, newID);
+            SCRI = ReplaceID(SCRI, oldID, newID);
+            // TODO: set Updated for all these
             foreach (var item in Items.Where(x => x.ID.Equals(oldID, StringComparison.OrdinalIgnoreCase)))
             {
                 item.ID = newID;
@@ -233,7 +229,7 @@ namespace MWLathe.Records
             Spells = Spells.Select(x => x.Equals(oldID, StringComparison.OrdinalIgnoreCase) ? newID : x).ToList();
             foreach (var aiPackage in AIPackages)
             {
-                aiPackage.ReplaceID(oldID, newID);
+                aiPackage.UpdateID(oldID, newID);
             }
         }
 

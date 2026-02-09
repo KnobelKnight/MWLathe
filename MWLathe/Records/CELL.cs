@@ -285,19 +285,20 @@ namespace MWLathe.Records
         }
 
         // TODO: make async?
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
+            // TODO: set Updated here
             foreach (var movedReference in MovedReferences.Where(x => x.FormMoved is not null))
             {
-                movedReference.FormMoved.ReplaceID(oldID, newID);
+                movedReference.FormMoved.UpdateID(oldID, newID);
             }
             foreach (var persistentChild in PersistentChildren)
             {
-                persistentChild.ReplaceID(oldID, newID);
+                persistentChild.UpdateID(oldID, newID);
             }
             foreach (var temporaryChild in TemporaryChildren)
             {
-                temporaryChild.ReplaceID(oldID, newID);
+                temporaryChild.UpdateID(oldID, newID);
             }
         }
 

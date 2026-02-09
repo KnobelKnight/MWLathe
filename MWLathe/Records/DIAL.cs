@@ -49,11 +49,12 @@ namespace MWLathe.Records
             }
         }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
             if (DATA == 4 && NAME.Equals(oldID, StringComparison.OrdinalIgnoreCase))
             {
                 NAME = newID;
+                Updated = true;
             }
         }
 

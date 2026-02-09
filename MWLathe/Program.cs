@@ -144,7 +144,7 @@ using (BufferedStream bs = new BufferedStream(fs))
         {
             foreach (var replacement in Replacements)
             {
-                newRecord.ReplaceID(replacement.OldID, replacement.NewID);
+                newRecord.UpdateID(replacement.OldID, replacement.NewID);
             }
         }
         newRecord.Write(ts);

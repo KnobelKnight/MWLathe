@@ -62,12 +62,10 @@ namespace MWLathe.Records
             }
         }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
-            if (NAME.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                NAME = newID;
-            }
+            NAME = ReplaceID(NAME, oldID, newID);
+            // TODO: set Updated here
             Creatures = Creatures.Select(x => x.Item1.Equals(oldID, StringComparison.OrdinalIgnoreCase) ? (newID, x.Item2) : (x.Item1, x.Item2)).ToList();
         }
 

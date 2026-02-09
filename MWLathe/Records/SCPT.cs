@@ -65,12 +65,10 @@ namespace MWLathe.Records
             }
         }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
-            if (SCHD.Name.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                SCHD.Name = newID;
-            }
+            SCHD.Name = ReplaceID(SCHD.Name, oldID, newID);
+            // TODO: set Updated here
             if (SCTX is not null)
             {
                 SCTX = Regex.Replace(SCTX, $"""(?:^|(?<=\W)|(?<=\\t)|(?<=(\\r\\n))){oldID}\b""", newID, RegexOptions.IgnoreCase);

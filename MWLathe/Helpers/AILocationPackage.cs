@@ -9,12 +9,9 @@
         public string ID { get; set; }
         public string? Cell { get; set; }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
-            if (ID.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                ID = newID;
-            }
+            ID = ReplaceID(ID, oldID, newID);
         }
 
         public override uint GetByteSize()

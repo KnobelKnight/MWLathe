@@ -47,16 +47,10 @@ namespace MWLathe.Records
             }
         }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
-            if (CNAM is not null && CNAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                CNAM = newID;
-            }
-            if (SNAM is not null && SNAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                SNAM = newID;
-            }
+            CNAM = ReplaceID(CNAM, oldID, newID);
+            SNAM = ReplaceID(SNAM, oldID, newID);
         }
 
         public override void CalculateRecordSize()

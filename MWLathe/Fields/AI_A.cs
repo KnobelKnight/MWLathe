@@ -12,12 +12,9 @@ namespace MWLathe.Helpers
             return 8 + 33;
         }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
-            if (ID.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                ID = newID;
-            }
+            ID = ReplaceID(ID, oldID, newID);
         }
 
         public override void Write(FileStream ts)

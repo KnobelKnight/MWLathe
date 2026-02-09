@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace MWLathe.Records
 {
@@ -7,6 +8,8 @@ namespace MWLathe.Records
         public uint RecordSize { get; set; }
         public uint RecordFlags { get; set; }
         public uint? Deleted { get; set; }
+
+        public bool Updated { get; set; } = false;
 
         public virtual void Populate(BufferedStream bs)
         {
@@ -19,7 +22,18 @@ namespace MWLathe.Records
             RecordFlags = BitConverter.ToUInt32(buffer);
         }
 
-        public abstract void ReplaceID(string oldID, string newID);
+        public abstract void UpdateID(string oldID, string newID);
+
+        [return: NotNullIfNotNull(nameof(field))]
+        public string? ReplaceID(string? field, string oldID, string newID)
+        {
+            if (field is not null && field.Equals(oldID, StringComparison.OrdinalIgnoreCase))
+            {
+                field = newID;
+                Updated = true;
+            }
+            return field;
+        }
 
         public virtual void CalculateRecordSize()
         {

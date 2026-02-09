@@ -1,4 +1,5 @@
 ﻿using MWLathe.Records;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace MWLathe.Helpers
@@ -26,36 +27,28 @@ namespace MWLathe.Helpers
         public DODT? ReferencePosition { get; set; }
         public uint? Deleted { get; set; }
 
-        public void ReplaceID(string oldID, string newID)
+        public bool Updated { get; set; } = false;
+
+        [return: NotNullIfNotNull(nameof(field))]
+        public string? ReplaceID(string? field, string oldID, string newID)
         {
-            if (ObjectID.Equals(oldID, StringComparison.OrdinalIgnoreCase))
+            if (field is not null && field.Equals(oldID, StringComparison.OrdinalIgnoreCase))
             {
-                ObjectID = newID;
+                field = newID;
+                Updated = true;
             }
-            if (NPCID is not null && NPCID.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                NPCID = newID;
-            }
-            if (OwnershipGlobal is not null && OwnershipGlobal.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                OwnershipGlobal = newID;
-            }
-            if (FactionID is not null && FactionID.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                FactionID = newID;
-            }
-            if (Soul is not null && Soul.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                Soul = newID;
-            }
-            if (KeyName is not null && KeyName.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                KeyName = newID;
-            }
-            if (TrapName is not null && TrapName.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                TrapName = newID;
-            }
+            return field;
+        }
+
+        public void UpdateID(string oldID, string newID)
+        {
+            ObjectID = ReplaceID(ObjectID, oldID, newID);
+            NPCID = ReplaceID(NPCID, oldID, newID);
+            OwnershipGlobal = ReplaceID(OwnershipGlobal, oldID, newID);
+            FactionID = ReplaceID(FactionID, oldID, newID);
+            Soul = ReplaceID(Soul, oldID, newID);
+            KeyName = ReplaceID(KeyName, oldID, newID);
+            TrapName = ReplaceID(TrapName, oldID, newID);
         }
 
         public uint GetByteSize()

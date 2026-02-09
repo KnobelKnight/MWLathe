@@ -62,12 +62,9 @@ namespace MWLathe.Records
             }
         }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
-            if (NAME.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                NAME = newID;
-            }
+            NAME = ReplaceID(NAME, oldID, newID);
         }
 
         public override void CalculateRecordSize()

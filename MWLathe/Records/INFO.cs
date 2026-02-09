@@ -143,35 +143,18 @@ namespace MWLathe.Records
             }
         }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
-            if (ONAM is not null && ONAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                ONAM = newID;
-            }
-            if (RNAM is not null && RNAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                RNAM = newID;
-            }
-            if (CNAM is not null && CNAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                CNAM = newID;
-            }
-            if (FNAM is not null && FNAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                FNAM = newID;
-            }
-            if (DNAM is not null && DNAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                DNAM = newID;
-            }
+            ONAM = ReplaceID(ONAM, oldID, newID);
+            RNAM = ReplaceID(RNAM, oldID, newID);
+            CNAM = ReplaceID(CNAM, oldID, newID);
+            FNAM = ReplaceID(FNAM, oldID, newID);
+            DNAM = ReplaceID(DNAM, oldID, newID);
             foreach (var filter in Filters)
             {
-                if (filter.Name is not null && filter.Name.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-                {
-                    filter.Name = newID;
-                }
+                filter.Name = ReplaceID(filter.Name, oldID, newID);
             }
+            // TODO: set Updated here
             if (BNAM is not null)
             {
                 BNAM = Regex.Replace(BNAM, $"""(?:^|(?<=\W)|(?<=\\t)|(?<=(\\r\\n))){oldID}\b""", newID, RegexOptions.IgnoreCase);

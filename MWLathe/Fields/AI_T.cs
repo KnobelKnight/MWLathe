@@ -8,7 +8,7 @@ namespace MWLathe.Helpers
         public float DestY { get; set; }
         public float DestZ { get; set; }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
 
         }

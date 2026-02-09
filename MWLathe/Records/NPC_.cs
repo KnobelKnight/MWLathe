@@ -240,7 +240,7 @@ namespace MWLathe.Records
             }
         }
 
-        public override void ReplaceID(string oldID, string newID)
+        public override void UpdateID(string oldID, string newID)
         {
             if (NAME.Equals(oldID, StringComparison.OrdinalIgnoreCase))
             {
@@ -250,31 +250,15 @@ namespace MWLathe.Records
                     Environment.Exit(3);
                 }
                 NAME = newID;
+                Updated = true;
             }
-            if (RNAM is not null && RNAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                RNAM = newID;
-            }
-            if (CNAM is not null && CNAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                CNAM = newID;
-            }
-            if (ANAM is not null && ANAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                ANAM = newID;
-            }
-            if (BNAM is not null && BNAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                BNAM = newID;
-            }
-            if (KNAM is not null && KNAM.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                KNAM = newID;
-            }
-            if (SCRI is not null && SCRI.Equals(oldID, StringComparison.OrdinalIgnoreCase))
-            {
-                SCRI = newID;
-            }
+            RNAM = ReplaceID(RNAM, oldID, newID);
+            CNAM = ReplaceID(CNAM, oldID, newID);
+            ANAM = ReplaceID(ANAM, oldID, newID);
+            BNAM = ReplaceID(BNAM, oldID, newID);
+            KNAM = ReplaceID(KNAM, oldID, newID);
+            SCRI = ReplaceID(SCRI, oldID, newID);
+            // TODO: set Updated on all these
             foreach (var item in Items.Where(x => x.ID.Equals(oldID, StringComparison.OrdinalIgnoreCase)))
             {
                 item.ID = newID;
@@ -282,7 +266,7 @@ namespace MWLathe.Records
             Spells = Spells.Select(x => x.Equals(oldID, StringComparison.OrdinalIgnoreCase) ? newID : x).ToList();
             foreach (var aiPackage in AIPackages)
             {
-                aiPackage.ReplaceID(oldID, newID);
+                aiPackage.UpdateID(oldID, newID);
             }
         }
 
