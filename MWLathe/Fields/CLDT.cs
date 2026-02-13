@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MWLathe.Records;
+using System.Text;
 
 namespace MWLathe.Helpers
 {
@@ -24,7 +25,7 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("CLDT"));
+            ts.Write(Record.Encoding.GetBytes("CLDT"));
             ts.Write(BitConverter.GetBytes(StructSize));
             ts.Write(BitConverter.GetBytes(PrimaryAttribute1));
             ts.Write(BitConverter.GetBytes(PrimaryAttribute2));

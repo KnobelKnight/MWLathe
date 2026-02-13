@@ -32,7 +32,7 @@ namespace MWLathe.Records
             while (bytesRead < RecordSize)
             {
                 bytesRead += bs.Read(buffer, 0, 8);
-                var fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                var fieldType = Encoding.GetString(buffer, 0, 4);
                 var fieldSize = BitConverter.ToUInt32(buffer, 4);
                 switch (fieldType)
                 {
@@ -103,7 +103,7 @@ namespace MWLathe.Records
                         {
                             Index = (char)buffer[0],
                             Type = (char)buffer[1],
-                            Details = Encoding.GetEncoding("Windows-1252").GetString(buffer, 2, 2),
+                            Details = Encoding.GetString(buffer, 2, 2),
                             Operator = (char)buffer[4]
                         };
                         if (fieldSize > 5)
@@ -225,13 +225,13 @@ namespace MWLathe.Records
         public override void Write(FileStream ts)
         {
             base.Write(ts);
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("INAM"));
+            ts.Write(Encoding.GetBytes("INAM"));
             ts.Write(BitConverter.GetBytes(INAM.Length + 1));
             ts.Write(EncodeZString(INAM));
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("PNAM"));
+            ts.Write(Encoding.GetBytes("PNAM"));
             ts.Write(BitConverter.GetBytes(PNAM.Length + 1));
             ts.Write(EncodeZString(PNAM));
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NNAM"));
+            ts.Write(Encoding.GetBytes("NNAM"));
             ts.Write(BitConverter.GetBytes(NNAM.Length + 1));
             ts.Write(EncodeZString(NNAM));
             if (DATA is not null)
@@ -240,55 +240,55 @@ namespace MWLathe.Records
             }
             if (ONAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("ONAM"));
+                ts.Write(Encoding.GetBytes("ONAM"));
                 ts.Write(BitConverter.GetBytes(ONAM.Length + 1));
                 ts.Write(EncodeZString(ONAM));
             }
             if (RNAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("RNAM"));
+                ts.Write(Encoding.GetBytes("RNAM"));
                 ts.Write(BitConverter.GetBytes(RNAM.Length + 1));
                 ts.Write(EncodeZString(RNAM));
             }
             if (CNAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("CNAM"));
+                ts.Write(Encoding.GetBytes("CNAM"));
                 ts.Write(BitConverter.GetBytes(CNAM.Length + 1));
                 ts.Write(EncodeZString(CNAM));
             }
             if (FNAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("FNAM"));
+                ts.Write(Encoding.GetBytes("FNAM"));
                 ts.Write(BitConverter.GetBytes(FNAM.Length + 1));
                 ts.Write(EncodeZString(FNAM));
             }
             if (ANAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("ANAM"));
+                ts.Write(Encoding.GetBytes("ANAM"));
                 ts.Write(BitConverter.GetBytes(ANAM.Length + 1));
                 ts.Write(EncodeZString(ANAM));
             }
             if (DNAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DNAM"));
+                ts.Write(Encoding.GetBytes("DNAM"));
                 ts.Write(BitConverter.GetBytes(DNAM.Length + 1));
                 ts.Write(EncodeZString(DNAM));
             }
             if (SNAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("SNAM"));
+                ts.Write(Encoding.GetBytes("SNAM"));
                 ts.Write(BitConverter.GetBytes(SNAM.Length + 1));
                 ts.Write(EncodeZString(SNAM));
             }
             if (NAME is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NAME"));
+                ts.Write(Encoding.GetBytes("NAME"));
                 ts.Write(BitConverter.GetBytes(NAME.Length));
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(NAME));
+                ts.Write(Encoding.GetBytes(NAME));
             }
             if (QSTR.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("QSTR"));
+                ts.Write(Encoding.GetBytes("QSTR"));
                 ts.Write(BitConverter.GetBytes(1));
                 ts.WriteByte(QSTR.Value ? (byte)1 : (byte)0);
             }
@@ -298,25 +298,25 @@ namespace MWLathe.Records
             }
             if (BNAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("BNAM"));
+                ts.Write(Encoding.GetBytes("BNAM"));
                 ts.Write(BitConverter.GetBytes(BNAM.Length));
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(BNAM));
+                ts.Write(Encoding.GetBytes(BNAM));
             }
             if (QSTN.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("QSTN"));
+                ts.Write(Encoding.GetBytes("QSTN"));
                 ts.Write(BitConverter.GetBytes(1));
                 ts.WriteByte(QSTN.Value ? (byte)1 : (byte)0);
             }
             if (QSTF.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("QSTF"));
+                ts.Write(Encoding.GetBytes("QSTF"));
                 ts.Write(BitConverter.GetBytes(1));
                 ts.WriteByte(QSTF.Value ? (byte)1 : (byte)0);
             }
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }

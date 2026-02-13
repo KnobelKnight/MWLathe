@@ -16,7 +16,7 @@ namespace MWLathe.Records
             while (bytesRead < RecordSize)
             {
                 bytesRead += bs.Read(buffer, 0, 8);
-                var fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                var fieldType = Encoding.GetString(buffer, 0, 4);
                 var fieldSize = BitConverter.ToUInt32(buffer, 4);
                 switch (fieldType)
                 {
@@ -28,9 +28,9 @@ namespace MWLathe.Records
                         bytesRead += bs.Read(buffer, 0, 40);
                         HEDR.Version = BitConverter.ToSingle(buffer);
                         HEDR.Flags = BitConverter.ToUInt32(buffer, 4);
-                        HEDR.Developer = Encoding.GetEncoding("Windows-1252").GetString(buffer, 8, 32);
+                        HEDR.Developer = Encoding.GetString(buffer, 8, 32);
                         bytesRead += bs.Read(buffer, 0, 256);
-                        HEDR.Description = Encoding.GetEncoding("Windows-1252").GetString(buffer);
+                        HEDR.Description = Encoding.GetString(buffer);
                         bytesRead += bs.Read(buffer, 0, 4);
                         HEDR.TotalRecords = BitConverter.ToUInt32(buffer);
                         break;
@@ -39,7 +39,7 @@ namespace MWLathe.Records
                         bytesRead += masterName.Length + 1;
                         // Data subfield
                         bytesRead += bs.Read(buffer, 0, 4);
-                        fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                        fieldType = Encoding.GetString(buffer, 0, 4);
                         if (fieldType != "DATA")
                         {
                             throw new Exception($"Expected field \"DATA\", got field \"{fieldType}\"");
@@ -80,7 +80,7 @@ namespace MWLathe.Records
             }
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }

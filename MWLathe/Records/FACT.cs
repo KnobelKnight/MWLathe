@@ -19,7 +19,7 @@ namespace MWLathe.Records
             while (bytesRead < RecordSize)
             {
                 bytesRead += bs.Read(buffer, 0, 8);
-                var fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                var fieldType = Encoding.GetString(buffer, 0, 4);
                 var fieldSize = BitConverter.ToUInt32(buffer, 4);
                 switch (fieldType)
                 {
@@ -37,7 +37,7 @@ namespace MWLathe.Records
                         break;
                     case "RNAM":
                         bytesRead += bs.Read(buffer, 0, 32);
-                        var rankName = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 32);
+                        var rankName = Encoding.GetString(buffer, 0, 32);
                         RankNames.Add(rankName);
                         break;
                     case "FADT":
@@ -71,7 +71,7 @@ namespace MWLathe.Records
                         bytesRead += (int)fieldSize;
                         // Reaction subfield
                         bytesRead += bs.Read(buffer, 0, 12);
-                        fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                        fieldType = Encoding.GetString(buffer, 0, 4);
                         if (fieldType != "INTV")
                         {
                             throw new Exception($"Expected field \"INTV\", got field \"{fieldType}\"");
@@ -112,18 +112,18 @@ namespace MWLathe.Records
         public override void Write(FileStream ts)
         {
             base.Write(ts);
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NAME"));
+            ts.Write(Encoding.GetBytes("NAME"));
             ts.Write(BitConverter.GetBytes(NAME.Length + 1));
             ts.Write(EncodeZString(NAME));
             if (FNAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("FNAM"));
+                ts.Write(Encoding.GetBytes("FNAM"));
                 ts.Write(BitConverter.GetBytes(FNAM.Length + 1));
                 ts.Write(EncodeZString(FNAM));
             }
             foreach (var rankName in RankNames)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("RNAM"));
+                ts.Write(Encoding.GetBytes("RNAM"));
                 ts.Write(BitConverter.GetBytes(32));
                 ts.Write(EncodeChar32(rankName));
             }
@@ -133,16 +133,16 @@ namespace MWLathe.Records
             }
             foreach (var reaction in Reactions)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("ANAM"));
+                ts.Write(Encoding.GetBytes("ANAM"));
                 ts.Write(BitConverter.GetBytes(reaction.Item1.Length));
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(reaction.Item1));
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("INTV"));
+                ts.Write(Encoding.GetBytes(reaction.Item1));
+                ts.Write(Encoding.GetBytes("INTV"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(reaction.Item2));
             }
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }

@@ -11,7 +11,7 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NPCO"));
+            ts.Write(Record.Encoding.GetBytes("NPCO"));
             ts.Write(BitConverter.GetBytes(36)); // NPCO struct size
             ts.Write(BitConverter.GetBytes(Count));
             ts.Write(Record.EncodeChar32(ID));

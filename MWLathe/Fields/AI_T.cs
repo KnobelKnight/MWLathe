@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MWLathe.Records;
+using System.Text;
 
 namespace MWLathe.Helpers
 {
@@ -20,7 +21,7 @@ namespace MWLathe.Helpers
 
         public override void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("AI_T"));
+            ts.Write(Record.Encoding.GetBytes("AI_T"));
             ts.Write(BitConverter.GetBytes(16));
             ts.Write(BitConverter.GetBytes(DestX));
             ts.Write(BitConverter.GetBytes(DestY));

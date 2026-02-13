@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MWLathe.Records;
+using System.Text;
 
 namespace MWLathe.Helpers
 {
@@ -14,7 +15,7 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("LHDT"));
+            ts.Write(Record.Encoding.GetBytes("LHDT"));
             ts.Write(BitConverter.GetBytes(StructSize)); // LHDT struct size
             ts.Write(BitConverter.GetBytes(Weight));
             ts.Write(BitConverter.GetBytes(Value));

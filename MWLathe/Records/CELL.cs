@@ -29,7 +29,7 @@ namespace MWLathe.Records
             while (bytesRead < RecordSize)
             {
                 bytesRead += bs.Read(buffer, 0, 8);
-                var fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                var fieldType = Encoding.GetString(buffer, 0, 4);
                 var fieldSize = BitConverter.ToUInt32(buffer, 4);
                 switch (fieldType)
                 {
@@ -335,31 +335,31 @@ namespace MWLathe.Records
         public override void Write(FileStream ts)
         {
             base.Write(ts);
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NAME"));
+            ts.Write(Encoding.GetBytes("NAME"));
             ts.Write(BitConverter.GetBytes(NAME.Length + 1));
             ts.Write(EncodeZString(NAME));
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }
             DATA.Write(ts);
             if (RGNN is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("RGNN"));
+                ts.Write(Encoding.GetBytes("RGNN"));
                 ts.Write(BitConverter.GetBytes(RGNN.Length + 1));
                 ts.Write(EncodeZString(RGNN));
             }
             if (NAM5 is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NAM5"));
+                ts.Write(Encoding.GetBytes("NAM5"));
                 ts.Write(BitConverter.GetBytes(4)); // RGB struct size
                 NAM5.Write(ts, true);
             }
             if (WHGT.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("WHGT"));
+                ts.Write(Encoding.GetBytes("WHGT"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(WHGT.Value));
             }
@@ -377,7 +377,7 @@ namespace MWLathe.Records
             }
             if (NAM0.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NAM0"));
+                ts.Write(Encoding.GetBytes("NAM0"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(NAM0.Value));
             }

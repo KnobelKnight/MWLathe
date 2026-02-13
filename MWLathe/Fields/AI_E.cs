@@ -7,7 +7,7 @@ namespace MWLathe.Helpers
     {
         public override void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("AI_E"));
+            ts.Write(Record.Encoding.GetBytes("AI_E"));
             ts.Write(BitConverter.GetBytes(48)); // AI_E struct size
             ts.Write(BitConverter.GetBytes(DestX));
             ts.Write(BitConverter.GetBytes(DestY));
@@ -19,7 +19,7 @@ namespace MWLathe.Helpers
 
             if (Cell is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("CNDT"));
+                ts.Write(Record.Encoding.GetBytes("CNDT"));
                 ts.Write(BitConverter.GetBytes(Cell.Length + 1));
                 ts.Write(Record.EncodeZString(Cell));
             }

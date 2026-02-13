@@ -15,7 +15,7 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("SCHD"));
+            ts.Write(Record.Encoding.GetBytes("SCHD"));
             ts.Write(BitConverter.GetBytes(StructSize));
             ts.Write(Record.EncodeChar32(Name));
             ts.Write(BitConverter.GetBytes(ShortCount));

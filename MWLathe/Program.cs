@@ -138,7 +138,7 @@ using (BufferedStream bs = new BufferedStream(fs))
 {
     while (bs.Read(buffer, 0, buffer.Length) > 0)
     {
-        Record newRecord = IdentifyRecord(Encoding.GetEncoding("Windows-1252").GetString(buffer));
+        Record newRecord = IdentifyRecord(Record.Encoding.GetString(buffer));
         newRecord.Populate(bs);
         if (!recordsWithoutID.Contains(newRecord.GetType().Name))
         {

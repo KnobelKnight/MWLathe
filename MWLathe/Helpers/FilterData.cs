@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MWLathe.Records;
+using System.Text;
 
 namespace MWLathe.Helpers
 {
@@ -33,7 +34,7 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("SCVR"));
+            ts.Write(Record.Encoding.GetBytes("SCVR"));
             var byteSize = 5;
             var outputString = string.Concat(Index, Type, Details, Operator);
             if (Name is not null)
@@ -42,16 +43,16 @@ namespace MWLathe.Helpers
                 outputString = outputString + Name;
             }
             ts.Write(BitConverter.GetBytes(byteSize));
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(outputString)); // NOT a zstring
+            ts.Write(Record.Encoding.GetBytes(outputString)); // NOT a zstring
             if (IntValue.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("INTV"));
+                ts.Write(Record.Encoding.GetBytes("INTV"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(IntValue.Value));
             }
             if (FloatValue.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("FLTV"));
+                ts.Write(Record.Encoding.GetBytes("FLTV"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(FloatValue.Value));
             }

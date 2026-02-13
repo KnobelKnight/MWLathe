@@ -15,10 +15,10 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("MAST"));
+            ts.Write(Record.Encoding.GetBytes("MAST"));
             ts.Write(BitConverter.GetBytes(Name.Length + 1));
             ts.Write(Record.EncodeZString(Name));
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DATA"));
+            ts.Write(Record.Encoding.GetBytes("DATA"));
             ts.Write(BitConverter.GetBytes(8));
             ts.Write(BitConverter.GetBytes(Size));
         }

@@ -5,6 +5,7 @@ namespace MWLathe.Records
 {
     public abstract class Record
     {
+        public static Encoding Encoding { get; } = Encoding.GetEncoding("Windows-1252");
         public uint RecordSize { get; set; }
         public uint RecordFlags { get; set; }
         public uint? Deleted { get; set; }
@@ -47,7 +48,7 @@ namespace MWLathe.Records
         public virtual void Write(FileStream ts)
         {
             CalculateRecordSize();
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(GetType().Name));
+            ts.Write(Encoding.GetBytes(GetType().Name));
             ts.Write(BitConverter.GetBytes(RecordSize));
             ts.Write(BitConverter.GetBytes(0));
             ts.Write(BitConverter.GetBytes(RecordFlags));
@@ -61,7 +62,7 @@ namespace MWLathe.Records
             {
                 byteList.Add((byte)readByte);
             }
-            return Encoding.GetEncoding("Windows-1252").GetString(byteList.ToArray());
+            return Encoding.GetString(byteList.ToArray());
         }
 
         public static string ReadStringField(BufferedStream bs, uint fieldSize)
@@ -75,13 +76,13 @@ namespace MWLathe.Records
                 if (difference > 256)
                 {
                     bs.Read(buffer, 0, 256);
-                    sb.Append(Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 256));
+                    sb.Append(Encoding.GetString(buffer, 0, 256));
                     fieldBytes += 256;
                 }
                 else
                 {
                     bs.Read(buffer, 0, difference);
-                    sb.Append(Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, difference));
+                    sb.Append(Encoding.GetString(buffer, 0, difference));
                     fieldBytes = fieldSize;
                 }
             }
@@ -90,12 +91,12 @@ namespace MWLathe.Records
 
         public static byte[] EncodeZString(string zString)
         {
-            return Encoding.GetEncoding("Windows-1252").GetBytes(zString + '\0');
+            return Encoding.GetBytes(zString + '\0');
         }
 
         public static byte[] EncodeChar32(string inputString)
         {
-            return Encoding.GetEncoding("Windows-1252").GetBytes(inputString.PadRight(32, '\0'));
+            return Encoding.GetBytes(inputString.PadRight(32, '\0'));
         }
     }
 }

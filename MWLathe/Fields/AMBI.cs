@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MWLathe.Records;
+using System.Text;
 
 namespace MWLathe.Helpers
 {
@@ -12,7 +13,7 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("AMBI"));
+            ts.Write(Record.Encoding.GetBytes("AMBI"));
             ts.Write(BitConverter.GetBytes(StructSize));
             AmbientColor.Write(ts, true);
             SunColor.Write(ts, true);

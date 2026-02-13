@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MWLathe.Records;
+using System.Text;
 
 namespace MWLathe.Helpers
 {
@@ -12,7 +13,7 @@ namespace MWLathe.Helpers
 
         public virtual void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DATA"));
+            ts.Write(Record.Encoding.GetBytes("DATA"));
             ts.Write(BitConverter.GetBytes(StructSize));
             ts.Write(BitConverter.GetBytes(GridX));
             ts.Write(BitConverter.GetBytes(GridY));

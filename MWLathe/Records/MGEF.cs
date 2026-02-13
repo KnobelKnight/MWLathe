@@ -27,7 +27,7 @@ namespace MWLathe.Records
             while (bytesRead < RecordSize)
             {
                 bytesRead += bs.Read(buffer, 0, 8);
-                var fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                var fieldType = Encoding.GetString(buffer, 0, 4);
                 var fieldSize = BitConverter.ToUInt32(buffer, 4);
                 switch (fieldType)
                 {
@@ -163,79 +163,79 @@ namespace MWLathe.Records
         public override void Write(FileStream ts)
         {
             base.Write(ts);
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("INDX"));
+            ts.Write(Encoding.GetBytes("INDX"));
             ts.Write(BitConverter.GetBytes(4));
             ts.Write(BitConverter.GetBytes(INDX));
             MEDT.Write(ts);
             if (ITEX is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("ITEX"));
+                ts.Write(Encoding.GetBytes("ITEX"));
                 ts.Write(BitConverter.GetBytes(ITEX.Length + 1));
                 ts.Write(EncodeZString(ITEX));
             }
             if (PTEX is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("PTEX"));
+                ts.Write(Encoding.GetBytes("PTEX"));
                 ts.Write(BitConverter.GetBytes(PTEX.Length + 1));
                 ts.Write(EncodeZString(PTEX));
             }
             if (BSND is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("BSND"));
+                ts.Write(Encoding.GetBytes("BSND"));
                 ts.Write(BitConverter.GetBytes(BSND.Length + 1));
                 ts.Write(EncodeZString(BSND));
             }
             if (CSND is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("CSND"));
+                ts.Write(Encoding.GetBytes("CSND"));
                 ts.Write(BitConverter.GetBytes(CSND.Length + 1));
                 ts.Write(EncodeZString(CSND));
             }
             if (HSND is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("HSND"));
+                ts.Write(Encoding.GetBytes("HSND"));
                 ts.Write(BitConverter.GetBytes(HSND.Length + 1));
                 ts.Write(EncodeZString(HSND));
             }
             if (ASND is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("ASND"));
+                ts.Write(Encoding.GetBytes("ASND"));
                 ts.Write(BitConverter.GetBytes(ASND.Length + 1));
                 ts.Write(EncodeZString(ASND));
             }
             if (CVFX is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("CVFX"));
+                ts.Write(Encoding.GetBytes("CVFX"));
                 ts.Write(BitConverter.GetBytes(CVFX.Length + 1));
                 ts.Write(EncodeZString(CVFX));
             }
             if (BVFX is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("BVFX"));
+                ts.Write(Encoding.GetBytes("BVFX"));
                 ts.Write(BitConverter.GetBytes(BVFX.Length + 1));
                 ts.Write(EncodeZString(BVFX));
             }
             if (HVFX is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("HVFX"));
+                ts.Write(Encoding.GetBytes("HVFX"));
                 ts.Write(BitConverter.GetBytes(HVFX.Length + 1));
                 ts.Write(EncodeZString(HVFX));
             }
             if (AVFX is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("AVFX"));
+                ts.Write(Encoding.GetBytes("AVFX"));
                 ts.Write(BitConverter.GetBytes(AVFX.Length + 1));
                 ts.Write(EncodeZString(AVFX));
             }
             if (DESC is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DESC"));
+                ts.Write(Encoding.GetBytes("DESC"));
                 ts.Write(BitConverter.GetBytes(DESC.Length));
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(DESC));
+                ts.Write(Encoding.GetBytes(DESC));
             }
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }

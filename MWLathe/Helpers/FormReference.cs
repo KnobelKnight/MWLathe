@@ -124,69 +124,69 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("FRMR"));
+            ts.Write(Record.Encoding.GetBytes("FRMR"));
             ts.Write(BitConverter.GetBytes(4));
             ts.Write(BitConverter.GetBytes(ReferenceID));
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NAME"));
+            ts.Write(Record.Encoding.GetBytes("NAME"));
             ts.Write(BitConverter.GetBytes(ObjectID.Length + 1));
             ts.Write(Record.EncodeZString(ObjectID));
             if (Blocked.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("UNAM"));
+                ts.Write(Record.Encoding.GetBytes("UNAM"));
                 ts.Write(BitConverter.GetBytes(1));
                 ts.WriteByte(Blocked.Value);
             }
             if (Scale.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("XSCL"));
+                ts.Write(Record.Encoding.GetBytes("XSCL"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Scale.Value));
             }
             if (NPCID is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("ANAM"));
+                ts.Write(Record.Encoding.GetBytes("ANAM"));
                 ts.Write(BitConverter.GetBytes(NPCID.Length + 1));
                 ts.Write(Record.EncodeZString(NPCID));
             }
             if (OwnershipGlobal is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("BNAM"));
+                ts.Write(Record.Encoding.GetBytes("BNAM"));
                 ts.Write(BitConverter.GetBytes(OwnershipGlobal.Length + 1));
                 ts.Write(Record.EncodeZString(OwnershipGlobal));
             }
             if (FactionID is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("CNAM"));
+                ts.Write(Record.Encoding.GetBytes("CNAM"));
                 ts.Write(BitConverter.GetBytes(FactionID.Length + 1));
                 ts.Write(Record.EncodeZString(FactionID));
             }
             if (FactionRank.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("INDX"));
+                ts.Write(Record.Encoding.GetBytes("INDX"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(FactionRank.Value));
             }
             if (Soul is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("XSOL"));
+                ts.Write(Record.Encoding.GetBytes("XSOL"));
                 ts.Write(BitConverter.GetBytes(Soul.Length + 1));
                 ts.Write(Record.EncodeZString(Soul));
             }
             if (EnchantCharge.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("XCHG"));
+                ts.Write(Record.Encoding.GetBytes("XCHG"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(EnchantCharge.Value));
             }
             if (RemainingUsage is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("INTV"));
+                ts.Write(Record.Encoding.GetBytes("INTV"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(RemainingUsage.AsSpan()[..4]); // Should never be more than 4 bytes anyway, but just in case...
             }
             if (Value.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NAM9"));
+                ts.Write(Record.Encoding.GetBytes("NAM9"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Value.Value));
             }
@@ -196,31 +196,31 @@ namespace MWLathe.Helpers
             }
             if (LockDifficulty.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("FLTV"));
+                ts.Write(Record.Encoding.GetBytes("FLTV"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(LockDifficulty.Value));
             }
             if (KeyName is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("KNAM"));
+                ts.Write(Record.Encoding.GetBytes("KNAM"));
                 ts.Write(BitConverter.GetBytes(KeyName.Length + 1));
                 ts.Write(Record.EncodeZString(KeyName));
             }
             if (TrapName is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("TNAM"));
+                ts.Write(Record.Encoding.GetBytes("TNAM"));
                 ts.Write(BitConverter.GetBytes(TrapName.Length + 1));
                 ts.Write(Record.EncodeZString(TrapName));
             }
             if (Disabled.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("ZNAM"));
+                ts.Write(Record.Encoding.GetBytes("ZNAM"));
                 ts.Write(BitConverter.GetBytes(1));
                 ts.WriteByte(Disabled.Value);
             }
             if (ReferencePosition is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DATA"));
+                ts.Write(Record.Encoding.GetBytes("DATA"));
                 ts.Write(BitConverter.GetBytes(24));
                 ts.Write(BitConverter.GetBytes(ReferencePosition.PositionX));
                 ts.Write(BitConverter.GetBytes(ReferencePosition.PositionY));
@@ -231,7 +231,7 @@ namespace MWLathe.Helpers
             }
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Record.Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }

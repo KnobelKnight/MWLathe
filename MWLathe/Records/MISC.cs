@@ -20,7 +20,7 @@ namespace MWLathe.Records
             while (bytesRead < RecordSize)
             {
                 bytesRead += bs.Read(buffer, 0, 8);
-                var fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                var fieldType = Encoding.GetString(buffer, 0, 4);
                 var fieldSize = BitConverter.ToUInt32(buffer, 4);
                 switch (fieldType)
                 {
@@ -96,18 +96,18 @@ namespace MWLathe.Records
         public override void Write(FileStream ts)
         {
             base.Write(ts);
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NAME"));
+            ts.Write(Encoding.GetBytes("NAME"));
             ts.Write(BitConverter.GetBytes(NAME.Length + 1));
             ts.Write(EncodeZString(NAME));
             if (MODL is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("MODL"));
+                ts.Write(Encoding.GetBytes("MODL"));
                 ts.Write(BitConverter.GetBytes(MODL.Length + 1));
                 ts.Write(EncodeZString(MODL));
             }
             if (FNAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("FNAM"));
+                ts.Write(Encoding.GetBytes("FNAM"));
                 ts.Write(BitConverter.GetBytes(FNAM.Length + 1));
                 ts.Write(EncodeZString(FNAM));
             }
@@ -117,19 +117,19 @@ namespace MWLathe.Records
             }  
             if (SCRI is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("SCRI"));
+                ts.Write(Encoding.GetBytes("SCRI"));
                 ts.Write(BitConverter.GetBytes(SCRI.Length + 1));
                 ts.Write(EncodeZString(SCRI));
             }
             if (ITEX is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("ITEX"));
+                ts.Write(Encoding.GetBytes("ITEX"));
                 ts.Write(BitConverter.GetBytes(ITEX.Length + 1));
                 ts.Write(EncodeZString(ITEX));
             }
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }

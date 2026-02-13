@@ -17,7 +17,7 @@ namespace MWLathe.Records
             while (bytesRead < RecordSize)
             {
                 bytesRead += bs.Read(buffer, 0, 8);
-                var fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                var fieldType = Encoding.GetString(buffer, 0, 4);
                 var fieldSize = BitConverter.ToUInt32(buffer, 4);
                 switch (fieldType)
                 {
@@ -66,19 +66,19 @@ namespace MWLathe.Records
         public override void Write(FileStream ts)
         {
             base.Write(ts);
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("INDX"));
+            ts.Write(Encoding.GetBytes("INDX"));
             ts.Write(BitConverter.GetBytes(4));
             ts.Write(BitConverter.GetBytes(INDX));
             SKDT.Write(ts);
             if (DESC is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DESC"));
+                ts.Write(Encoding.GetBytes("DESC"));
                 ts.Write(BitConverter.GetBytes(DESC.Length));
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(DESC));
+                ts.Write(Encoding.GetBytes(DESC));
             }
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }

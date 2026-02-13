@@ -30,18 +30,18 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("MVRF"));
+            ts.Write(Record.Encoding.GetBytes("MVRF"));
             ts.Write(BitConverter.GetBytes(4));
             ts.Write(BitConverter.GetBytes(ID));
             if (CellName is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("CNAM"));
+                ts.Write(Record.Encoding.GetBytes("CNAM"));
                 ts.Write(BitConverter.GetBytes(CellName.Length + 1));
                 ts.Write(Record.EncodeZString(CellName));
             }
             if (GridCoordinates.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("CNDT"));
+                ts.Write(Record.Encoding.GetBytes("CNDT"));
                 ts.Write(BitConverter.GetBytes(8));
                 ts.Write(BitConverter.GetBytes(GridCoordinates.Value.Item1));
                 ts.Write(BitConverter.GetBytes(GridCoordinates.Value.Item2));

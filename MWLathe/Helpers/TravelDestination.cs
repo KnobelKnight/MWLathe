@@ -20,7 +20,7 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DODT"));
+            ts.Write(Record.Encoding.GetBytes("DODT"));
             ts.Write(BitConverter.GetBytes(DODT.StructSize));
             ts.Write(BitConverter.GetBytes(Location.PositionX));
             ts.Write(BitConverter.GetBytes(Location.PositionY));
@@ -30,7 +30,7 @@ namespace MWLathe.Helpers
             ts.Write(BitConverter.GetBytes(Location.RotationZ));
             if (Cell is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DNAM"));
+                ts.Write(Record.Encoding.GetBytes("DNAM"));
                 ts.Write(BitConverter.GetBytes(Cell.Length + 1));
                 ts.Write(Record.EncodeZString(Cell));
             }

@@ -17,7 +17,7 @@ namespace MWLathe.Records
             while (bytesRead < RecordSize)
             {
                 bytesRead += bs.Read(buffer, 0, 8);
-                var fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                var fieldType = Encoding.GetString(buffer, 0, 4);
                 var fieldSize = BitConverter.ToUInt32(buffer, 4);
                 switch (fieldType)
                 {
@@ -73,30 +73,30 @@ namespace MWLathe.Records
         public override void Write(FileStream ts)
         {
             base.Write(ts);
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NAME"));
+            ts.Write(Encoding.GetBytes("NAME"));
             ts.Write(BitConverter.GetBytes(NAME.Length));
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(NAME));
+            ts.Write(Encoding.GetBytes(NAME));
             if (FLTV.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("FLTV"));
+                ts.Write(Encoding.GetBytes("FLTV"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(FLTV.Value));
             }
             if (INTV.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("INTV"));
+                ts.Write(Encoding.GetBytes("INTV"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(INTV.Value));
             }
             if (STRV is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("STRV"));
+                ts.Write(Encoding.GetBytes("STRV"));
                 ts.Write(BitConverter.GetBytes(STRV.Length));
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(STRV));
+                ts.Write(Encoding.GetBytes(STRV));
             }
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }

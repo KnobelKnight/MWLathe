@@ -25,7 +25,7 @@ namespace MWLathe.Records
             while (bytesRead < RecordSize)
             {
                 bytesRead += bs.Read(buffer, 0, 8);
-                var fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                var fieldType = Encoding.GetString(buffer, 0, 4);
                 var fieldSize = BitConverter.ToUInt32(buffer, 4);
                 switch (fieldType)
                 {
@@ -148,16 +148,16 @@ namespace MWLathe.Records
         public override void Write(FileStream ts)
         {
             base.Write(ts);
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("INTV"));
+            ts.Write(Encoding.GetBytes("INTV"));
             ts.Write(BitConverter.GetBytes(8));
             ts.Write(BitConverter.GetBytes(INTV.Item1));
             ts.Write(BitConverter.GetBytes(INTV.Item2));
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DATA"));
+            ts.Write(Encoding.GetBytes("DATA"));
             ts.Write(BitConverter.GetBytes(4));
             ts.Write(BitConverter.GetBytes(DATA));
             if (VNML is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("VNML"));
+                ts.Write(Encoding.GetBytes("VNML"));
                 ts.Write(BitConverter.GetBytes(12675)); // VNML struct size (65 * 65 * 3)
                 foreach (var innerList in VNML)
                 {
@@ -171,7 +171,7 @@ namespace MWLathe.Records
             }
             if (VHGT is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("VHGT"));
+                ts.Write(Encoding.GetBytes("VHGT"));
                 ts.Write(BitConverter.GetBytes(VHGT.StructSize));
                 ts.Write(BitConverter.GetBytes(VHGT.Offset));
                 foreach (var innerList in VHGT.Data)
@@ -187,7 +187,7 @@ namespace MWLathe.Records
             }
             if (WNAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("WNAM"));
+                ts.Write(Encoding.GetBytes("WNAM"));
                 ts.Write(BitConverter.GetBytes(81)); // WNAM struct size
                 foreach (var innerList in WNAM)
                 {
@@ -199,7 +199,7 @@ namespace MWLathe.Records
             }
             if (VCLR is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("VCLR"));
+                ts.Write(Encoding.GetBytes("VCLR"));
                 ts.Write(BitConverter.GetBytes(12675)); // VCLR struct size (65 * 65 * 3)
                 foreach (var innerList in VCLR)
                 {
@@ -211,7 +211,7 @@ namespace MWLathe.Records
             }
             if (VTEX is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("VTEX"));
+                ts.Write(Encoding.GetBytes("VTEX"));
                 ts.Write(BitConverter.GetBytes(512)); // VTEX struct size (16 * 16 * 2)
                 foreach (var innerList in VTEX)
                 {
@@ -223,7 +223,7 @@ namespace MWLathe.Records
             }
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }

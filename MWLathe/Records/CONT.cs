@@ -21,7 +21,7 @@ namespace MWLathe.Records
             while (bytesRead < RecordSize)
             {
                 bytesRead += bs.Read(buffer, 0, 8);
-                var fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                var fieldType = Encoding.GetString(buffer, 0, 4);
                 var fieldSize = BitConverter.ToUInt32(buffer, 4);
                 switch (fieldType)
                 {
@@ -54,7 +54,7 @@ namespace MWLathe.Records
                         Items.Add(new NPCO
                         {
                             Count = BitConverter.ToInt32(buffer),
-                            ID = Encoding.GetEncoding("Windows-1252").GetString(buffer, 4, 32).TrimEnd('\0')
+                            ID = Encoding.GetString(buffer, 4, 32).TrimEnd('\0')
                         });
                         break;
                     case "SCRI":
@@ -117,36 +117,36 @@ namespace MWLathe.Records
         public override void Write(FileStream ts)
         {
             base.Write(ts);
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NAME"));
+            ts.Write(Encoding.GetBytes("NAME"));
             ts.Write(BitConverter.GetBytes(NAME.Length + 1));
             ts.Write(EncodeZString(NAME));
             if (MODL is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("MODL"));
+                ts.Write(Encoding.GetBytes("MODL"));
                 ts.Write(BitConverter.GetBytes(MODL.Length + 1));
                 ts.Write(EncodeZString(MODL));
             }
             if (FNAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("FNAM"));
+                ts.Write(Encoding.GetBytes("FNAM"));
                 ts.Write(BitConverter.GetBytes(FNAM.Length + 1));
                 ts.Write(EncodeZString(FNAM));
             }
             if (CNDT.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("CNDT"));
+                ts.Write(Encoding.GetBytes("CNDT"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(CNDT.Value));
             }
             if (FLAG.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("FLAG"));
+                ts.Write(Encoding.GetBytes("FLAG"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(FLAG.Value));
             }
             if (SCRI is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("SCRI"));
+                ts.Write(Encoding.GetBytes("SCRI"));
                 ts.Write(BitConverter.GetBytes(SCRI.Length + 1));
                 ts.Write(EncodeZString(SCRI));
             }
@@ -156,7 +156,7 @@ namespace MWLathe.Records
             }
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }

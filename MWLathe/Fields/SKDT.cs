@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MWLathe.Records;
+using System.Text;
 
 namespace MWLathe.Helpers
 {
@@ -14,7 +15,7 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("SKDT"));
+            ts.Write(Record.Encoding.GetBytes("SKDT"));
             ts.Write(BitConverter.GetBytes(StructSize));
             ts.Write(BitConverter.GetBytes(Attribute));
             ts.Write(BitConverter.GetBytes(Specialization));

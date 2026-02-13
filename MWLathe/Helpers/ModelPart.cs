@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MWLathe.Records;
+using System.Text;
 
 namespace MWLathe.Helpers
 {
@@ -24,20 +25,20 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("INDX"));
+            ts.Write(Record.Encoding.GetBytes("INDX"));
             ts.Write(BitConverter.GetBytes(1));
             ts.WriteByte(BipedObject);
             if (MaleModel != null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("BNAM"));
+                ts.Write(Record.Encoding.GetBytes("BNAM"));
                 ts.Write(BitConverter.GetBytes(MaleModel.Length));
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(MaleModel));
+                ts.Write(Record.Encoding.GetBytes(MaleModel));
             }
             if (FemaleModel != null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("CNAM"));
+                ts.Write(Record.Encoding.GetBytes("CNAM"));
                 ts.Write(BitConverter.GetBytes(FemaleModel.Length));
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(FemaleModel));
+                ts.Write(Record.Encoding.GetBytes(FemaleModel));
             }
         }
     }

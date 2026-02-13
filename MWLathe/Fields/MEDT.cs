@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MWLathe.Records;
+using System.Text;
 
 namespace MWLathe.Helpers
 {
@@ -17,7 +18,7 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("MEDT"));
+            ts.Write(Record.Encoding.GetBytes("MEDT"));
             ts.Write(BitConverter.GetBytes(StructSize)); // Struct size
             ts.Write(BitConverter.GetBytes(School));
             ts.Write(BitConverter.GetBytes(BaseCost));

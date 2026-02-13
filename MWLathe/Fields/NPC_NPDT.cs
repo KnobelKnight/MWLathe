@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MWLathe.Records;
+using System.Text;
 
 namespace MWLathe.Helpers
 {
@@ -18,7 +19,7 @@ namespace MWLathe.Helpers
 
         public virtual void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NPDT"));
+            ts.Write(Record.Encoding.GetBytes("NPDT"));
             ts.Write(BitConverter.GetBytes(GetStructSize()));
             ts.Write(BitConverter.GetBytes(Level));
             ts.WriteByte(Disposition);

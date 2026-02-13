@@ -18,7 +18,7 @@ namespace MWLathe.Records
             while (bytesRead < RecordSize)
             {
                 bytesRead += bs.Read(buffer, 0, 8);
-                var fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                var fieldType = Encoding.GetString(buffer, 0, 4);
                 var fieldSize = BitConverter.ToUInt32(buffer, 4);
                 switch (fieldType)
                 {
@@ -95,12 +95,12 @@ namespace MWLathe.Records
         {
             base.Write(ts);
             DATA.Write(ts);
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NAME"));
+            ts.Write(Encoding.GetBytes("NAME"));
             ts.Write(BitConverter.GetBytes(NAME.Length + 1));
             ts.Write(EncodeZString(NAME));
             if (PGRP is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("PGRP"));
+                ts.Write(Encoding.GetBytes("PGRP"));
                 ts.Write(BitConverter.GetBytes(PGRP.Count * 16));
                 foreach (var point in PGRP)
                 {
@@ -115,7 +115,7 @@ namespace MWLathe.Records
             }
             if (PGRC is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("PGRC"));
+                ts.Write(Encoding.GetBytes("PGRC"));
                 ts.Write(BitConverter.GetBytes(PGRC.Count * 4));
                 foreach (var connection in PGRC)
                 {
@@ -124,7 +124,7 @@ namespace MWLathe.Records
             }
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }

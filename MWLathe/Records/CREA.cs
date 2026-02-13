@@ -29,7 +29,7 @@ namespace MWLathe.Records
             while (bytesRead < RecordSize)
             {
                 bytesRead += bs.Read(buffer, 0, 8);
-                var fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                var fieldType = Encoding.GetString(buffer, 0, 4);
                 var fieldSize = BitConverter.ToUInt32(buffer, 4);
                 switch (fieldType)
                 {
@@ -98,12 +98,12 @@ namespace MWLathe.Records
                         Items.Add(new NPCO
                         {
                             Count = BitConverter.ToInt32(buffer),
-                            ID = Encoding.GetEncoding("Windows-1252").GetString(buffer, 4, 32).TrimEnd('\0')
+                            ID = Encoding.GetString(buffer, 4, 32).TrimEnd('\0')
                         });
                         break;
                     case "NPCS":
                         bytesRead += bs.Read(buffer, 0, 32);
-                        Spells.Add(Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 32).TrimEnd('\0'));
+                        Spells.Add(Encoding.GetString(buffer, 0, 32).TrimEnd('\0'));
                         break;
                     case "AIDT":
                         AIDT = new AIDT();
@@ -136,7 +136,7 @@ namespace MWLathe.Records
                         bytesRead += bs.Read(buffer, 0, 33);
                         AIPackages.Add(new AI_A
                         {
-                            ID = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 32).TrimEnd('\0')
+                            ID = Encoding.GetString(buffer, 0, 32).TrimEnd('\0')
                         });
                         // Remaining byte is junk
                         break;
@@ -148,7 +148,7 @@ namespace MWLathe.Records
                             DestY = BitConverter.ToSingle(buffer, 4),
                             DestZ = BitConverter.ToSingle(buffer, 8),
                             Duration = BitConverter.ToUInt16(buffer, 12),
-                            ID = Encoding.GetEncoding("Windows-1252").GetString(buffer, 14, 32).TrimEnd('\0')
+                            ID = Encoding.GetString(buffer, 14, 32).TrimEnd('\0')
                         };
                         // Remaining 2 bytes are junk
                         AIPackages.Add(newEscort);
@@ -162,7 +162,7 @@ namespace MWLathe.Records
                             DestY = BitConverter.ToSingle(buffer, 4),
                             DestZ = BitConverter.ToSingle(buffer, 8),
                             Duration = BitConverter.ToUInt16(buffer, 12),
-                            ID = Encoding.GetEncoding("Windows-1252").GetString(buffer, 14, 32).TrimEnd('\0')
+                            ID = Encoding.GetString(buffer, 14, 32).TrimEnd('\0')
                         };
                         // Remaining 2 bytes are junk
                         AIPackages.Add(newFollow);
@@ -278,30 +278,30 @@ namespace MWLathe.Records
         public override void Write(FileStream ts)
         {
             base.Write(ts);
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NAME"));
+            ts.Write(Encoding.GetBytes("NAME"));
             ts.Write(BitConverter.GetBytes(NAME.Length + 1));
             ts.Write(EncodeZString(NAME));
             if (MODL is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("MODL"));
+                ts.Write(Encoding.GetBytes("MODL"));
                 ts.Write(BitConverter.GetBytes(MODL.Length + 1));
                 ts.Write(EncodeZString(MODL));
             }
             if (CNAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("CNAM"));
+                ts.Write(Encoding.GetBytes("CNAM"));
                 ts.Write(BitConverter.GetBytes(CNAM.Length + 1));
                 ts.Write(EncodeZString(CNAM));
             }
             if (FNAM is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("FNAM"));
+                ts.Write(Encoding.GetBytes("FNAM"));
                 ts.Write(BitConverter.GetBytes(FNAM.Length + 1));
                 ts.Write(EncodeZString(FNAM));
             }
             if (SCRI is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("SCRI"));
+                ts.Write(Encoding.GetBytes("SCRI"));
                 ts.Write(BitConverter.GetBytes(SCRI.Length + 1));
                 ts.Write(EncodeZString(SCRI));
             }
@@ -311,13 +311,13 @@ namespace MWLathe.Records
             }
             if (FLAG.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("FLAG"));
+                ts.Write(Encoding.GetBytes("FLAG"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(FLAG.Value));
             }
             if (XSCL.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("XSCL"));
+                ts.Write(Encoding.GetBytes("XSCL"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(XSCL.Value));
             }
@@ -327,7 +327,7 @@ namespace MWLathe.Records
             }
             foreach (var spell in Spells)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("NPCS"));
+                ts.Write(Encoding.GetBytes("NPCS"));
                 ts.Write(BitConverter.GetBytes(32));
                 ts.Write(EncodeChar32(spell));
             }
@@ -345,7 +345,7 @@ namespace MWLathe.Records
             }
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }

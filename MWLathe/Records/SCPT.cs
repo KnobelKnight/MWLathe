@@ -19,7 +19,7 @@ namespace MWLathe.Records
             while (bytesRead < RecordSize)
             {
                 bytesRead += bs.Read(buffer, 0, 8);
-                var fieldType = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 4);
+                var fieldType = Encoding.GetString(buffer, 0, 4);
                 var fieldSize = BitConverter.ToUInt32(buffer, 4);
                 switch (fieldType)
                 {
@@ -29,7 +29,7 @@ namespace MWLathe.Records
                         break;
                     case "SCHD":
                         bytesRead += bs.Read(buffer, 0, 52);
-                        SCHD.Name = Encoding.GetEncoding("Windows-1252").GetString(buffer, 0, 32).TrimEnd('\0');
+                        SCHD.Name = Encoding.GetString(buffer, 0, 32).TrimEnd('\0');
                         SCHD.ShortCount = BitConverter.ToUInt32(buffer, 32);
                         SCHD.LongCount = BitConverter.ToUInt32(buffer, 36);
                         SCHD.FloatCount = BitConverter.ToUInt32(buffer, 40);
@@ -99,7 +99,7 @@ namespace MWLathe.Records
             SCHD.Write(ts);
             if (SCVR is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("SCVR"));
+                ts.Write(Encoding.GetBytes("SCVR"));
                 var byteCount = 0;
                 foreach (var local in SCVR)
                 {
@@ -113,19 +113,19 @@ namespace MWLathe.Records
             }
             if (SCDT is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("SCDT"));
+                ts.Write(Encoding.GetBytes("SCDT"));
                 ts.Write(BitConverter.GetBytes(SCDT.Count));
                 ts.Write(SCDT.ToArray());
             }
             if (SCTX is not null)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("SCTX"));
+                ts.Write(Encoding.GetBytes("SCTX"));
                 ts.Write(BitConverter.GetBytes(SCTX.Length));
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(SCTX));
+                ts.Write(Encoding.GetBytes(SCTX));
             }
             if (Deleted.HasValue)
             {
-                ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("DELE"));
+                ts.Write(Encoding.GetBytes("DELE"));
                 ts.Write(BitConverter.GetBytes(4));
                 ts.Write(BitConverter.GetBytes(Deleted.Value));
             }

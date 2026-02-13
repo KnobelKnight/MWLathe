@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MWLathe.Records;
+using System.Text;
 
 namespace MWLathe.Helpers
 {
@@ -14,7 +15,7 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("AIDT"));
+            ts.Write(Record.Encoding.GetBytes("AIDT"));
             ts.Write(BitConverter.GetBytes(StructSize));
             ts.WriteByte(Hello);
             ts.WriteByte(Junk);

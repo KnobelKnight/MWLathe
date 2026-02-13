@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MWLathe.Records;
+using System.Text;
 
 namespace MWLathe.Helpers
 {
@@ -15,12 +16,12 @@ namespace MWLathe.Helpers
 
         public void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("HEDR"));
+            ts.Write(Record.Encoding.GetBytes("HEDR"));
             ts.Write(BitConverter.GetBytes(StructSize)); // HEDR struct is 300 bytes
             ts.Write(BitConverter.GetBytes(Version));
             ts.Write(BitConverter.GetBytes(Flags));
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(Developer));
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes(Description));
+            ts.Write(Record.Encoding.GetBytes(Developer));
+            ts.Write(Record.Encoding.GetBytes(Description));
             ts.Write(BitConverter.GetBytes(TotalRecords));
         }
     }

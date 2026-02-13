@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using MWLathe.Records;
+using System.Text;
 
 namespace MWLathe.Helpers
 {
@@ -18,7 +19,7 @@ namespace MWLathe.Helpers
 
         public virtual void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("WEAT"));
+            ts.Write(Record.Encoding.GetBytes("WEAT"));
             ts.Write(BitConverter.GetBytes(StructSize));
             ts.WriteByte(Clear);
             ts.WriteByte(Cloudy);

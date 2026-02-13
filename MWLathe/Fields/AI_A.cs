@@ -19,7 +19,7 @@ namespace MWLathe.Helpers
 
         public override void Write(FileStream ts)
         {
-            ts.Write(Encoding.GetEncoding("Windows-1252").GetBytes("AI_A"));
+            ts.Write(Record.Encoding.GetBytes("AI_A"));
             ts.Write(BitConverter.GetBytes(33));
             ts.Write(Record.EncodeChar32(ID));
             ts.WriteByte(0); // Junk value
