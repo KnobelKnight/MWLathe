@@ -18,6 +18,7 @@ namespace MWLathe.Records
         public AIDT? AIDT { get; set; }
         public List<TravelDestination> Destinations { get; set; } = new List<TravelDestination>();
         public List<AIPackage> AIPackages { get; set; } = new List<AIPackage>();
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {
@@ -221,15 +222,24 @@ namespace MWLathe.Records
             }
             CNAM = ReplaceID(CNAM, oldID, newID);
             SCRI = ReplaceID(SCRI, oldID, newID);
-            // TODO: set Updated for all these
             foreach (var item in Items.Where(x => x.ID.Equals(oldID, StringComparison.OrdinalIgnoreCase)))
             {
                 item.ID = newID;
+                Updated = true;
             }
+            var originalSpells = Spells;
             Spells = Spells.Select(x => x.Equals(oldID, StringComparison.OrdinalIgnoreCase) ? newID : x).ToList();
+            if (!originalSpells.SequenceEqual(Spells))
+            {
+                Updated = true;
+            }
             foreach (var aiPackage in AIPackages)
             {
                 aiPackage.UpdateID(oldID, newID);
+                if (aiPackage.Updated)
+                {
+                    Updated = true;
+                }
             }
         }
 

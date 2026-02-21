@@ -8,6 +8,7 @@ namespace MWLathe.Records
         public uint INDX { get; set; }
         public SKDT SKDT { get; set; } = new SKDT();
         public string? DESC { get; set; }
+        public override string Identifier => INDX.ToString();
 
         public override void Populate(BufferedStream bs)
         {

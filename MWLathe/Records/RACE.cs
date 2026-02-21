@@ -10,6 +10,7 @@ namespace MWLathe.Records
         public RADT RADT { get; set; } = new RADT();
         public List<string> Abilities { get; set; } = new List<string>();
         public string? DESC { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {
@@ -91,8 +92,12 @@ namespace MWLathe.Records
         public override void UpdateID(string oldID, string newID)
         {
             NAME = ReplaceID(NAME, oldID, newID);
-            // TODO: set Updated here
+            var originalAbilities = Abilities;
             Abilities = Abilities.Select(x => x.Equals(oldID, StringComparison.OrdinalIgnoreCase) ? newID : x).ToList();
+            if (!originalAbilities.SequenceEqual(Abilities))
+            {
+                Updated = true;
+            }
         }
 
         public override void CalculateRecordSize()

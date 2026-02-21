@@ -15,6 +15,7 @@ namespace MWLathe.Records
         public List<FormReference> PersistentChildren { get; set; } = new List<FormReference>();
         public uint? NAM0 { get; set; }
         public List<FormReference> TemporaryChildren { get; set; } = new List<FormReference>();
+        public override string Identifier => (DATA.Flags & 1) == 1 ? NAME : $"{(NAME.Length > 0 ? NAME : RGNN)} ({DATA.GridX}, {DATA.GridY})";
 
         public override void Populate(BufferedStream bs)
         {
@@ -287,18 +288,29 @@ namespace MWLathe.Records
         // TODO: make async?
         public override void UpdateID(string oldID, string newID)
         {
-            // TODO: set Updated here
             foreach (var movedReference in MovedReferences.Where(x => x.FormMoved is not null))
             {
                 movedReference.FormMoved.UpdateID(oldID, newID);
+                if (movedReference.FormMoved.Updated)
+                {
+                    Updated = true;
+                }
             }
             foreach (var persistentChild in PersistentChildren)
             {
                 persistentChild.UpdateID(oldID, newID);
+                if (persistentChild.Updated)
+                {
+                    Updated = true;
+                }
             }
             foreach (var temporaryChild in TemporaryChildren)
             {
                 temporaryChild.UpdateID(oldID, newID);
+                if (temporaryChild.Updated)
+                {
+                    Updated = true;
+                }
             }
         }
 

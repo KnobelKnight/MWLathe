@@ -18,15 +18,12 @@ namespace MWLathe.Helpers
         public ushort Magicka { get; set; }
         public ushort Fatigue { get; set; }
 
-        public override uint GetStructSize()
-        {
-            return 52;
-        }
+        public override uint StructSize => 52;
 
         public override void Write(FileStream ts)
         {
             ts.Write(Record.Encoding.GetBytes("NPDT"));
-            ts.Write(BitConverter.GetBytes(GetStructSize()));
+            ts.Write(BitConverter.GetBytes(StructSize));
             ts.Write(BitConverter.GetBytes(Level));
             ts.WriteByte(Attribute1);
             ts.WriteByte(Attribute2);

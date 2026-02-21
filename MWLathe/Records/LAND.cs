@@ -16,6 +16,7 @@ namespace MWLathe.Records
         public List<List<RGB>>? VCLR { get; set; }
         // 16 x 16
         public List<List<ushort>>? VTEX { get; set; }
+        public override string Identifier => $"({INTV.Item1}, {INTV.Item2})";
 
         public override void Populate(BufferedStream bs)
         {

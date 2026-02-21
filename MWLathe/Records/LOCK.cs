@@ -11,6 +11,7 @@ namespace MWLathe.Records
         public UsableData? LKDT { get; set; }
         public string? SCRI { get; set; }
         public string? ITEX { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {

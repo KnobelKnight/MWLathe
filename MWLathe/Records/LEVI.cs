@@ -9,6 +9,7 @@ namespace MWLathe.Records
         public byte? NNAM { get; set; }
         public uint? INDX { get; set; }
         public List<(string, ushort)> Items { get; set; } = new List<(string, ushort)>();
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {
@@ -65,8 +66,12 @@ namespace MWLathe.Records
         public override void UpdateID(string oldID, string newID)
         {
             NAME = ReplaceID(NAME, oldID, newID);
-            // TODO: set Updated here
+            var originalItems = Items;
             Items = Items.Select(x => x.Item1.Equals(oldID, StringComparison.OrdinalIgnoreCase) ? (newID, x.Item2) : (x.Item1, x.Item2)).ToList();
+            if (!originalItems.SequenceEqual(Items))
+            {
+                Updated = true;
+            }
         }
 
         public override void CalculateRecordSize()

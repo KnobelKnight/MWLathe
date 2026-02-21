@@ -9,6 +9,7 @@ namespace MWLathe.Records
         public string? MODL { get; set; }
         public string? FNAM { get; set; } // This may not exist, despite what UESP says
         public BYDT? BYDT { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {

@@ -6,6 +6,7 @@ namespace MWLathe.Records
     {
         public string DATA { get; set; }
         public string? NAME { get; set; }
+        public override string Identifier => DATA;
 
         public override void Populate(BufferedStream bs)
         {

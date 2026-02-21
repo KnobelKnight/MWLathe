@@ -8,6 +8,7 @@ namespace MWLathe.Records
         public float? FLTV { get; set; }
         public int? INTV { get; set; }
         public string? STRV { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {

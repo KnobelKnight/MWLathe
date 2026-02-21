@@ -10,6 +10,7 @@ namespace MWLathe.Records
         public List<string> Spells { get; set; } = new List<string>();
         public string? TNAM { get; set; }
         public string? DESC { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {
@@ -57,8 +58,13 @@ namespace MWLathe.Records
         public override void UpdateID(string oldID, string newID)
         {
             NAME = ReplaceID(NAME, oldID, newID);
-            // TODO: set Updated here
+            
+            var originalSpells = Spells;
             Spells = Spells.Select(x => x.Equals(oldID, StringComparison.OrdinalIgnoreCase) ? newID : x).ToList();
+            if (!originalSpells.SequenceEqual(Spells))
+            {
+                Updated = true;
+            }
         }
 
         public override void CalculateRecordSize()

@@ -9,6 +9,7 @@ namespace MWLathe.Records
         // This may not exist, despite what UESP says
         public string? FNAM { get; set; }
         public SOUN_DATA? DATA { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {

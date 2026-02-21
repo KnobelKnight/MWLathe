@@ -18,6 +18,7 @@ namespace MWLathe.Records
         public string? HVFX { get; set; }
         public string? AVFX { get; set; }
         public string? DESC { get; set; }
+        public override string Identifier => INDX.ToString();
 
         public override void Populate(BufferedStream bs)
         {

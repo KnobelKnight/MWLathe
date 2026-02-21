@@ -13,6 +13,7 @@ namespace MWLathe.Records
         public string? ITEX { get; set; }
         public List<ModelPart> Parts { get; set; } = new List<ModelPart>();
         public string? ENAM { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {

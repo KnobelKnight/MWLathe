@@ -11,6 +11,7 @@ namespace MWLathe.Records
         public string? BNAM { get; set; }
         public RGB CNAM { get; set; } = new RGB();
         public List<(string, byte)> Sounds { get; set; } = new List<(string, byte)>();
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {
@@ -95,8 +96,12 @@ namespace MWLathe.Records
         {
             NAME = ReplaceID(NAME, oldID, newID);
             BNAM = ReplaceID(BNAM, oldID, newID);
-            // TODO: set Updated here
+            var originalSounds = Sounds;
             Sounds = Sounds.Select(x => x.Item1.Equals(oldID, StringComparison.OrdinalIgnoreCase) ? (newID, x.Item2) : (x.Item1, x.Item2)).ToList();
+            if (!originalSounds.SequenceEqual(Sounds))
+            {
+                Updated = true;
+            }
         }
 
         public override void CalculateRecordSize()

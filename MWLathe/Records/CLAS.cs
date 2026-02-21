@@ -9,6 +9,7 @@ namespace MWLathe.Records
         public string FNAM { get; set; }
         public CLDT CLDT { get; set; } = new CLDT();
         public string? DESC { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {

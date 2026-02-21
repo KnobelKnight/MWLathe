@@ -8,6 +8,7 @@ namespace MWLathe.Records
         public string NAME { get; set; }
         public ENDT? ENDT { get; set; }
         public List<ENAM> Effects { get; set; } = new List<ENAM>();
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {

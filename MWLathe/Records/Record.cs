@@ -11,6 +11,7 @@ namespace MWLathe.Records
         public uint? Deleted { get; set; }
 
         public bool Updated { get; set; } = false;
+        public abstract string Identifier { get; }
 
         public virtual void Populate(BufferedStream bs)
         {

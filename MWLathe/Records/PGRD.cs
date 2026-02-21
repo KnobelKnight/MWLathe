@@ -9,6 +9,7 @@ namespace MWLathe.Records
         public string NAME { get; set; }
         public List<PathgridPoint>? PGRP { get; set; }
         public List<uint>? PGRC { get; set; }
+        public override string Identifier => $"{NAME} ({DATA.GridX}, {DATA.GridY})";
 
         public override void Populate(BufferedStream bs)
         {

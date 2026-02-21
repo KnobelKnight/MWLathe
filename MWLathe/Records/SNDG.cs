@@ -8,6 +8,7 @@ namespace MWLathe.Records
         public uint DATA { get; set; }
         public string? CNAM { get; set; }
         public string? SNAM { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {

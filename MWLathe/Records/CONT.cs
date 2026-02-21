@@ -12,6 +12,7 @@ namespace MWLathe.Records
         public uint? FLAG { get; set; }
         public List<NPCO> Items { get; set; } = new List<NPCO>();
         public string? SCRI { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {
@@ -79,10 +80,10 @@ namespace MWLathe.Records
                 NAME = newID;
                 Updated = true;
             }
-            // TODO: set Updated here
             foreach (var item in Items.Where(x => x.ID.Equals(oldID, StringComparison.OrdinalIgnoreCase)))
             {
                 item.ID = newID;
+                Updated = true;
             }
             SCRI = ReplaceID(SCRI, oldID, newID);
         }

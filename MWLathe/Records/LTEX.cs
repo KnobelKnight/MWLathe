@@ -7,6 +7,7 @@ namespace MWLathe.Records
         public string NAME { get; set; }
         public uint INTV { get; set; }
         public string DATA { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {

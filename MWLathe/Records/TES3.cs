@@ -7,6 +7,7 @@ namespace MWLathe.Records
     {
         public HEDR HEDR { get; set; } = new HEDR();
         public List<Master> Masters { get; set; } = new List<Master>();
+        public override string Identifier => "Header";
 
         public override void Populate(BufferedStream bs)
         {

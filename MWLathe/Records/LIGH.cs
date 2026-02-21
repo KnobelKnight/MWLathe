@@ -12,6 +12,7 @@ namespace MWLathe.Records
         public LHDT? LHDT { get; set; }
         public string? SNAM { get; set; }
         public string? SCRI { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {

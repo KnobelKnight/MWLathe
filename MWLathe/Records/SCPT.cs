@@ -10,6 +10,7 @@ namespace MWLathe.Records
         public List<string>? SCVR { get; set; }
         public List<byte>? SCDT { get; set; }
         public string? SCTX { get; set; }
+        public override string Identifier => SCHD.Name;
 
         public override void Populate(BufferedStream bs)
         {
@@ -68,10 +69,14 @@ namespace MWLathe.Records
         public override void UpdateID(string oldID, string newID)
         {
             SCHD.Name = ReplaceID(SCHD.Name, oldID, newID);
-            // TODO: set Updated here
             if (SCTX is not null)
             {
+                var originalScriptText = SCTX;
                 SCTX = Regex.Replace(SCTX, $"""(?:^|(?<=\W)|(?<=\\t)|(?<=(\\r\\n))){oldID}\b""", newID, RegexOptions.IgnoreCase);
+                if (originalScriptText != SCTX)
+                {
+                    Updated = true;
+                }
             }
         }
 

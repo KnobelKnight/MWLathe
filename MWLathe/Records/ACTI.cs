@@ -8,6 +8,7 @@ namespace MWLathe.Records
         public string? MODL { get; set; }
         public string? FNAM { get; set; }
         public string? SCRI { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {

@@ -23,6 +23,7 @@ namespace MWLathe.Records
         public bool? QSTN { get; set; }
         public bool? QSTF { get; set; }
         public bool? QSTR { get; set; }
+        public override string Identifier => INAM;
 
         public override void Populate(BufferedStream bs)
         {
@@ -154,10 +155,15 @@ namespace MWLathe.Records
             {
                 filter.Name = ReplaceID(filter.Name, oldID, newID);
             }
-            // TODO: set Updated here
+            
             if (BNAM is not null)
             {
+                var originalResults = BNAM;
                 BNAM = Regex.Replace(BNAM, $"""(?:^|(?<=\W)|(?<=\\t)|(?<=(\\r\\n))){oldID}\b""", newID, RegexOptions.IgnoreCase);
+                if (originalResults != BNAM)
+                {
+                    Updated = true;
+                }
             }
         }
 

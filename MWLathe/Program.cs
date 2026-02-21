@@ -7,18 +7,20 @@ Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 if (args.Length == 0 || args[0] == "-h")
 {
-    Console.WriteLine("MWLathe v1.1");
+    Console.WriteLine("MWLathe v1.2");
     Console.WriteLine("https://github.com/KnobelKnight/MWLathe");
-    Console.WriteLine("Usage: mwlathe.exe <input.esm/esp> <output.esm/esp> <id_map>");
-    Console.WriteLine("For id_map: <old ID>,<new ID>");
-    Console.WriteLine("Make sure id_map is headerless and without quotes!");
+    Console.WriteLine("Usage: mwlathe.exe <input.esm/esp> <output.esm/esp> <ID map file>");
+    Console.WriteLine("For ID map: <old ID>,<new ID>");
+    Console.WriteLine("Make sure ID map is headerless and without quotes!");
     Console.WriteLine("Options:");
-    Console.WriteLine("-s <separator> | Set custom separator for id_map. Mandatory for non-csv/tsv files");
+    Console.WriteLine("-s <separator> | Set custom separator for ID map. Mandatory for non-csv/tsv files");
     Console.WriteLine("-b | Replace IDs within book texts. Useful for ex. PositionCell markers, but unsafe with plaintext IDs");
+    Console.WriteLine("-p <changelog file> | Print a list of all affected objects to changelog file in tab-separated format");
     Environment.Exit(0);
 }
 
 string? separator = null;
+string? changelogPath = null;
 var fileArgs = new List<string>();
 
 for (int i = 0; i < args.Length; i++)
@@ -31,6 +33,11 @@ for (int i = 0; i < args.Length; i++)
     else if (args[i] == "-b")
     {
         BOOK.replaceBookText = true;
+    }
+    else if (args[i] == "-p" && i + 1 < args.Length)
+    {
+        changelogPath = args[i + 1];
+        i++; // Skip the path value
     }
     else if (!args[i].StartsWith("-"))
     {
@@ -132,10 +139,20 @@ byte[] buffer = new byte[4];
 Stopwatch sw = Stopwatch.StartNew();
 List<string> recordsWithoutID = new List<string>(["LAND", "PGRD", "SKIL", "TES3"]);
 
+FileStream? cs = null;
+StreamWriter? swChangelog = null;
+if (changelogPath != null)
+{
+    cs = new FileStream(changelogPath, FileMode.Create, FileAccess.Write);
+    swChangelog = new StreamWriter(cs);
+    swChangelog.WriteLine("RecordType\tIdentifier");
+    swChangelog.Flush();
+}
 using (FileStream fs = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
 using (FileStream ts = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
 using (BufferedStream bs = new BufferedStream(fs))
 {
+    var updatedRecordCount = 0;
     while (bs.Read(buffer, 0, buffer.Length) > 0)
     {
         Record newRecord = IdentifyRecord(Record.Encoding.GetString(buffer));
@@ -146,11 +163,23 @@ using (BufferedStream bs = new BufferedStream(fs))
             {
                 newRecord.UpdateID(replacement.OldID, replacement.NewID);
             }
+            if (newRecord.Updated)
+            {
+                updatedRecordCount += 1;
+                if (cs is not null)
+                {
+                    swChangelog!.WriteLine($"{newRecord.GetType().Name}\t{newRecord.Identifier}");
+                }
+            }
         }
         newRecord.Write(ts);
     }
+    if (cs is not null)
+    {
+        swChangelog!.Dispose();
+    }
     sw.Stop();
-    Console.WriteLine($"Output successfully written to {Path.GetFileName(outputPath)} in {sw}. If scripts were affected, they will need to be recompiled.");
+    Console.WriteLine($"Output successfully written to {Path.GetFileName(outputPath)}. {updatedRecordCount} record(s) updated in {sw}. If scripts were affected, they will need to be recompiled.");
 }
 
 static Record IdentifyRecord(string recordType)

@@ -15,6 +15,7 @@ namespace MWLathe.Records
         public string? ITEX { get; set; }
         public string? TEXT { get; set; }
         public string? ENAM { get; set; }
+        public override string Identifier => NAME;
 
         public override void Populate(BufferedStream bs)
         {
@@ -79,12 +80,13 @@ namespace MWLathe.Records
         {
             NAME = ReplaceID(NAME, oldID, newID);
             SCRI = ReplaceID(SCRI, oldID, newID);
-            // TODO: set Updated here
-            if (replaceBookText)
+            if (replaceBookText && TEXT is not null)
             {
-                if (TEXT is not null)
+                string originalText = TEXT;
+                TEXT = Regex.Replace(TEXT, $"""(?:^|(?<=\W)|(?<=\\t)|(?<=(\\r\\n))){oldID}\b""", newID, RegexOptions.IgnoreCase);
+                if (originalText != TEXT)
                 {
-                    TEXT = Regex.Replace(TEXT, $"""(?:^|(?<=\W)|(?<=\\t)|(?<=(\\r\\n))){oldID}\b""", newID, RegexOptions.IgnoreCase);
+                    Updated = true;
                 }
             }
             ENAM = ReplaceID(ENAM, oldID, newID);
