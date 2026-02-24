@@ -57,7 +57,7 @@ namespace MWLathe.Records
 
         public override void UpdateID(string oldID, string newID)
         {
-            NAME = ReplaceID(NAME, oldID, newID);
+            NAME = ReplaceField(NAME, oldID, newID);
             
             var originalSpells = Spells;
             Spells = Spells.Select(x => x.Equals(oldID, StringComparison.OrdinalIgnoreCase) ? newID : x).ToList();
@@ -65,6 +65,10 @@ namespace MWLathe.Records
             {
                 Updated = true;
             }
+        }
+
+        public override void UpdateCell(string oldCell, string newCell)
+        {
         }
 
         public override void CalculateRecordSize()

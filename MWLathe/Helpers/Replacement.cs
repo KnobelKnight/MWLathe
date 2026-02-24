@@ -2,7 +2,7 @@
 {
     public class Replacement
     {
-        public string OldID { get; set; }
-        public string NewID { get; set; }
+        public string Old { get; set; }
+        public string New { get; set; }
     }
 }

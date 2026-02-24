@@ -119,6 +119,10 @@ namespace MWLathe.Records
         {
         }
 
+        public override void UpdateCell(string oldCell, string newCell)
+        {
+        }
+
         public override void CalculateRecordSize()
         {
             base.CalculateRecordSize();

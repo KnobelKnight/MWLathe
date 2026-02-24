@@ -1,4 +1,5 @@
 ﻿using MWLathe.Helpers;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -6,6 +7,7 @@ namespace MWLathe.Records
 {
     public class INFO : Record
     {
+        public static bool replaceDialogue = false;
         public string INAM { get; set; }
         public string PNAM { get; set; }
         public string NNAM { get; set; }
@@ -146,20 +148,41 @@ namespace MWLathe.Records
 
         public override void UpdateID(string oldID, string newID)
         {
-            ONAM = ReplaceID(ONAM, oldID, newID);
-            RNAM = ReplaceID(RNAM, oldID, newID);
-            CNAM = ReplaceID(CNAM, oldID, newID);
-            FNAM = ReplaceID(FNAM, oldID, newID);
-            DNAM = ReplaceID(DNAM, oldID, newID);
+            ONAM = ReplaceField(ONAM, oldID, newID);
+            RNAM = ReplaceField(RNAM, oldID, newID);
+            CNAM = ReplaceField(CNAM, oldID, newID);
+            FNAM = ReplaceField(FNAM, oldID, newID);
+            DNAM = ReplaceField(DNAM, oldID, newID);
             foreach (var filter in Filters)
             {
-                filter.Name = ReplaceID(filter.Name, oldID, newID);
+                filter.Name = ReplaceField(filter.Name, oldID, newID);
             }
             
             if (BNAM is not null)
             {
                 var originalResults = BNAM;
                 BNAM = Regex.Replace(BNAM, $"""(?:^|(?<=\W)|(?<=\\t)|(?<=(\\r\\n))){oldID}\b""", newID, RegexOptions.IgnoreCase);
+                if (originalResults != BNAM)
+                {
+                    Updated = true;
+                }
+            }
+        }
+
+        public override void UpdateCell(string oldCell, string newCell)
+        {
+            ANAM = ReplaceField(ANAM, oldCell, newCell);
+            foreach (var filter in Filters)
+            {
+                filter.Name = ReplaceField(filter.Name, oldCell, newCell);
+            }
+            // TODO: this always does partial matching
+            // TODO: addtopic "place name" is a problem. Will probably need to specifically check for functions:
+            // AIEscortCell, AIFollowCell, GetPCCell, PlaceItemCell, PositionCell, ShowMap
+            if (BNAM is not null)
+            {
+                var originalResults = BNAM;
+                BNAM = Regex.Replace(BNAM, $"""(?:^|(?<=\W)|(?<=\\t)|(?<=(\\r\\n))){oldCell}\b""", newCell, RegexOptions.IgnoreCase);
                 if (originalResults != BNAM)
                 {
                     Updated = true;

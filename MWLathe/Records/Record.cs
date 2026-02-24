@@ -26,16 +26,20 @@ namespace MWLathe.Records
 
         public abstract void UpdateID(string oldID, string newID);
 
+        public abstract void UpdateCell(string oldCell, string newCell);
+
         [return: NotNullIfNotNull(nameof(field))]
-        public string? ReplaceID(string? field, string oldID, string newID)
+        public string? ReplaceField(string? field, string oldValue, string newValue)
         {
-            if (field is not null && field.Equals(oldID, StringComparison.OrdinalIgnoreCase))
+            if (field is not null && field.Equals(oldValue, StringComparison.OrdinalIgnoreCase))
             {
-                field = newID;
+                field = newValue;
                 Updated = true;
             }
             return field;
         }
+
+        // TODO: partial fields
 
         public virtual void CalculateRecordSize()
         {

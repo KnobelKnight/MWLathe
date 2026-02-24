@@ -65,13 +65,17 @@ namespace MWLathe.Records
 
         public override void UpdateID(string oldID, string newID)
         {
-            NAME = ReplaceID(NAME, oldID, newID);
+            NAME = ReplaceField(NAME, oldID, newID);
             var originalItems = Items;
             Items = Items.Select(x => x.Item1.Equals(oldID, StringComparison.OrdinalIgnoreCase) ? (newID, x.Item2) : (x.Item1, x.Item2)).ToList();
             if (!originalItems.SequenceEqual(Items))
             {
                 Updated = true;
             }
+        }
+
+        public override void UpdateCell(string oldCell, string newCell)
+        {
         }
 
         public override void CalculateRecordSize()

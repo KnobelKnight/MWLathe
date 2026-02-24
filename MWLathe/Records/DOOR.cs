@@ -60,10 +60,14 @@ namespace MWLathe.Records
 
         public override void UpdateID(string oldID, string newID)
         {
-            NAME = ReplaceID(NAME, oldID, newID);
-            SCRI = ReplaceID(SCRI, oldID, newID);
-            SNAM = ReplaceID(SNAM, oldID, newID);
-            ANAM = ReplaceID(ANAM, oldID, newID);
+            NAME = ReplaceField(NAME, oldID, newID);
+            SCRI = ReplaceField(SCRI, oldID, newID);
+            SNAM = ReplaceField(SNAM, oldID, newID);
+            ANAM = ReplaceField(ANAM, oldID, newID);
+        }
+
+        public override void UpdateCell(string oldCell, string newCell)
+        {
         }
 
         public override void CalculateRecordSize()

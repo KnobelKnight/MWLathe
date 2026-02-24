@@ -94,14 +94,18 @@ namespace MWLathe.Records
 
         public override void UpdateID(string oldID, string newID)
         {
-            NAME = ReplaceID(NAME, oldID, newID);
-            BNAM = ReplaceID(BNAM, oldID, newID);
+            NAME = ReplaceField(NAME, oldID, newID);
+            BNAM = ReplaceField(BNAM, oldID, newID);
             var originalSounds = Sounds;
             Sounds = Sounds.Select(x => x.Item1.Equals(oldID, StringComparison.OrdinalIgnoreCase) ? (newID, x.Item2) : (x.Item1, x.Item2)).ToList();
             if (!originalSounds.SequenceEqual(Sounds))
             {
                 Updated = true;
             }
+        }
+
+        public override void UpdateCell(string oldCell, string newCell)
+        {
         }
 
         public override void CalculateRecordSize()

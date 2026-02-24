@@ -5,43 +5,101 @@ using System.Text;
 
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-if (args.Length == 0 || args[0] == "-h")
+if (args.Length == 0 || (args[0] == "-h" && (args.Length == 1 || !args[1].StartsWith("--"))))
 {
-    Console.WriteLine("MWLathe v1.2");
-    Console.WriteLine("https://github.com/KnobelKnight/MWLathe");
-    Console.WriteLine("Usage: mwlathe.exe <input.esm/esp> <output.esm/esp> <ID map file>");
-    Console.WriteLine("For ID map: <old ID>,<new ID>");
-    Console.WriteLine("Make sure ID map is headerless and without quotes!");
-    Console.WriteLine("Options:");
-    Console.WriteLine("-s <separator> | Set custom separator for ID map. Mandatory for non-csv/tsv files");
-    Console.WriteLine("-b | Replace IDs within book texts. Useful for ex. PositionCell markers, but unsafe with plaintext IDs");
-    Console.WriteLine("-p <changelog file> | Print a list of all affected objects to changelog file in tab-separated format");
+    ShowGenericHelp();
     Environment.Exit(0);
 }
 
+if (args[0] == "-h" && args[1].StartsWith("--"))
+{
+    ShowModeSpecificHelp(args[1]);
+    Environment.Exit(0);
+}
+
+string mode = "ID";
 string? separator = null;
+// TODO: implement
+bool partialMatching = false;
 string? changelogPath = null;
 var fileArgs = new List<string>();
 
-for (int i = 0; i < args.Length; i++)
+if (args[0].StartsWith("--"))
 {
-    if (args[i] == "-s" && i + 1 < args.Length)
+    switch (args[0])
     {
-        separator = args[i + 1];
-        i++; // Skip the separator value
+        case "--i":
+            mode = "ID";
+            break;
+        case "--c":
+            mode = "Cell";
+            break;
+        default:
+            Console.WriteLine($"Unknown mode \"{args[0]}\". mwlathe.exe -h for help");
+            Environment.Exit(1);
+            break;
     }
-    else if (args[i] == "-b")
+}
+
+int startIndex = args[0].StartsWith("--") ? 1 : 0;
+
+for (int i = startIndex; i < args.Length; i++)
+{
+    if (mode  == "ID")
     {
-        BOOK.replaceBookText = true;
+        // TODO: these should error if there's no extra argument
+        if (args[i] == "-s" && i + 1 < args.Length)
+        {
+            separator = args[i + 1];
+            i++; // Skip the separator value
+        }
+        else if (args[i] == "-b")
+        {
+            BOOK.replaceBookText = true;
+        }
+        else if (args[i] == "-p" && i + 1 < args.Length)
+        {
+            changelogPath = args[i + 1];
+            i++; // Skip the path value
+        }
+        else if (!args[i].StartsWith('-'))
+        {
+            fileArgs.Add(args[i]);
+        }
     }
-    else if (args[i] == "-p" && i + 1 < args.Length)
+    else if (mode == "Cell")
     {
-        changelogPath = args[i + 1];
-        i++; // Skip the path value
+        if (args[i] == "-s" && i + 1 < args.Length)
+        {
+            separator = args[i + 1];
+            i++; // Skip the separator value
+        }
+        else if (args[i] == "-b")
+        {
+            BOOK.replaceBookText = true;
+        }
+        else if (args[i] == "-d")
+        {
+            INFO.replaceDialogue = true;
+        }
+        else if (args[i] == "-m")
+        {
+            partialMatching = true;
+        }
+        else if (args[i] == "-p" && i + 1 < args.Length)
+        {
+            changelogPath = args[i + 1];
+            i++; // Skip the path value
+        }
+        else if (!args[i].StartsWith('-'))
+        {
+            fileArgs.Add(args[i]);
+        }
     }
-    else if (!args[i].StartsWith("-"))
+    else
     {
-        fileArgs.Add(args[i]);
+        Console.WriteLine($"Internal error: bad mode \"{mode}\"");
+        Environment.Exit(1);
     }
 }
 
@@ -98,88 +156,181 @@ foreach (var line in File.ReadLines(mapPath))
     string[] lineParts = line.Split(separator);
     if (lineParts.Length == 1 || lineParts[1] == "")
     {
-        Console.Error.WriteLine($"Skipping: no new ID for old ID \"{lineParts[0]}\"");
+        Console.Error.WriteLine($"Skipping: no new value for old value \"{lineParts[0]}\"");
     }
     else if (lineParts[0] == "")
     {
-        Console.Error.WriteLine($"Skipping: no old ID for new ID \"{lineParts[1]}\"");
+        Console.Error.WriteLine($"Skipping: no old value for new value \"{lineParts[1]}\"");
     }
-    else if (lineParts[1].Length > 31)
+    else if (mode == "ID" && lineParts[1].Length > 31)
     {
-        Console.Error.WriteLine($"Skipping: new ID \"{lineParts[1]}\" is {lineParts[1].Length} characters (max 31)");
+        Console.Error.WriteLine($"Skipping: new value \"{lineParts[1]}\" is {lineParts[1].Length} characters (max 31)");
     }
     else
     {
         Replacements.Add(new Replacement
         {
-            OldID = lineParts[0],
-            NewID = lineParts[1]
+            Old = lineParts[0],
+            New = lineParts[1]
         });
     }
 }
 
 if (Replacements.Count == 0)
 {
-    Console.Error.WriteLine($"Aborting: no replacement records read from {Path.GetFileName(mapPath)}");
+    Console.Error.WriteLine($"Aborting: no replacements read from {Path.GetFileName(mapPath)}");
     Environment.Exit(2);
 }
 var newIDList = new List<string>();
 foreach (var idPair in Replacements)
 {
-    if (newIDList.Contains(idPair.OldID))
+    if (newIDList.Contains(idPair.Old))
     {
-        Console.Error.WriteLine($"Warning: new ID {idPair.OldID} is later replaced by ID {idPair.NewID}. This may lead to unexpected results.");
+        Console.Error.WriteLine($"Warning: new ID {idPair.Old} is later replaced by ID {idPair.New}. This may lead to unexpected results.");
     }
-    newIDList.Add(idPair.NewID);
+    newIDList.Add(idPair.New);
 }
-Console.WriteLine($"Read {Replacements.Count} replacement record(s) from {Path.GetFileName(mapPath)}. Replacing...");
+Console.WriteLine($"Read {Replacements.Count} replacement(s) from {Path.GetFileName(mapPath)}. Replacing...");
 
 byte[] buffer = new byte[4];
 
 Stopwatch sw = Stopwatch.StartNew();
-List<string> recordsWithoutID = new List<string>(["LAND", "PGRD", "SKIL", "TES3"]);
+if (mode == "ID")
+{
+    List<string> recordsWithoutID = new List<string>(["LAND", "PGRD", "SKIL", "TES3"]);
 
-FileStream? cs = null;
-StreamWriter? swChangelog = null;
-if (changelogPath != null)
-{
-    cs = new FileStream(changelogPath, FileMode.Create, FileAccess.Write);
-    swChangelog = new StreamWriter(cs);
-    swChangelog.WriteLine("RecordType\tIdentifier");
-    swChangelog.Flush();
-}
-using (FileStream fs = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
-using (FileStream ts = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-using (BufferedStream bs = new BufferedStream(fs))
-{
-    var updatedRecordCount = 0;
-    while (bs.Read(buffer, 0, buffer.Length) > 0)
+    FileStream? cs = null;
+    StreamWriter? swChangelog = null;
+    if (changelogPath != null)
     {
-        Record newRecord = IdentifyRecord(Record.Encoding.GetString(buffer));
-        newRecord.Populate(bs);
-        if (!recordsWithoutID.Contains(newRecord.GetType().Name))
+        cs = new FileStream(changelogPath, FileMode.Create, FileAccess.Write);
+        swChangelog = new StreamWriter(cs);
+        swChangelog.WriteLine("RecordType\tIdentifier");
+        swChangelog.Flush();
+    }
+    using (FileStream fs = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
+    using (FileStream ts = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+    using (BufferedStream bs = new BufferedStream(fs))
+    {
+        var updatedRecordCount = 0;
+        while (bs.Read(buffer, 0, buffer.Length) > 0)
         {
-            foreach (var replacement in Replacements)
+            Record newRecord = IdentifyRecord(Record.Encoding.GetString(buffer));
+            newRecord.Populate(bs);
+            if (!recordsWithoutID.Contains(newRecord.GetType().Name))
             {
-                newRecord.UpdateID(replacement.OldID, replacement.NewID);
-            }
-            if (newRecord.Updated)
-            {
-                updatedRecordCount += 1;
-                if (cs is not null)
+                foreach (var replacement in Replacements)
                 {
-                    swChangelog!.WriteLine($"{newRecord.GetType().Name}\t{newRecord.Identifier}");
+                    newRecord.UpdateID(replacement.Old, replacement.New);
+                }
+                if (newRecord.Updated)
+                {
+                    updatedRecordCount += 1;
+                    if (cs is not null)
+                    {
+                        swChangelog!.WriteLine($"{newRecord.GetType().Name}\t{newRecord.Identifier}");
+                    }
                 }
             }
+            newRecord.Write(ts);
         }
-        newRecord.Write(ts);
+        if (cs is not null)
+        {
+            swChangelog!.Dispose();
+        }
+        Console.WriteLine($"Output successfully written to {Path.GetFileName(outputPath)}. {updatedRecordCount} record(s) updated in {sw}. If scripts were affected, they will need to be recompiled.");
     }
-    if (cs is not null)
+}
+else if (mode == "Cell")
+{
+    List<string> recordsWithCell = new List<string>(["BOOK", "CELL", "CREA", "INFO", "NPC_", "PGRD", "SCPT"]);
+
+    FileStream? cs = null;
+    StreamWriter? swChangelog = null;
+    if (changelogPath != null)
     {
-        swChangelog!.Dispose();
+        cs = new FileStream(changelogPath, FileMode.Create, FileAccess.Write);
+        swChangelog = new StreamWriter(cs);
+        swChangelog.WriteLine("RecordType\tIdentifier");
+        swChangelog.Flush();
     }
-    sw.Stop();
-    Console.WriteLine($"Output successfully written to {Path.GetFileName(outputPath)}. {updatedRecordCount} record(s) updated in {sw}. If scripts were affected, they will need to be recompiled.");
+    using (FileStream fs = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
+    using (FileStream ts = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+    using (BufferedStream bs = new BufferedStream(fs))
+    {
+        var updatedRecordCount = 0;
+        while (bs.Read(buffer, 0, buffer.Length) > 0)
+        {
+            Record newRecord = IdentifyRecord(Record.Encoding.GetString(buffer));
+            newRecord.Populate(bs);
+            if (recordsWithCell.Contains(newRecord.GetType().Name))
+            {
+                foreach (var replacement in Replacements)
+                {
+                    newRecord.UpdateCell(replacement.Old, replacement.New);
+                }
+                if (newRecord.Updated)
+                {
+                    updatedRecordCount += 1;
+                    if (cs is not null)
+                    {
+                        swChangelog!.WriteLine($"{newRecord.GetType().Name}\t{newRecord.Identifier}");
+                    }
+                }
+            }
+            newRecord.Write(ts);
+        }
+        if (cs is not null)
+        {
+            swChangelog!.Dispose();
+        }
+        Console.WriteLine($"Output successfully written to {Path.GetFileName(outputPath)}. {updatedRecordCount} record(s) updated in {sw}. If scripts were affected, they will need to be recompiled.");
+    }
+}
+else
+{
+    Console.WriteLine($"Internal error: bad mode \"{mode}\"");
+    Environment.Exit(1);
+}
+
+static void ShowGenericHelp()
+{
+    Console.WriteLine("MWLathe v2.0");
+    Console.WriteLine("https://github.com/KnobelKnight/MWLathe");
+    Console.WriteLine("Modes:");
+    Console.WriteLine("--i | ID replacement mode (default)");
+    Console.WriteLine("--c | Cell name replacement mode");
+    Console.WriteLine("mwlathe.exe -h <mode> for mode-specific options");
+}
+
+static void ShowModeSpecificHelp(string mode)
+{
+    switch (mode)
+    {
+        case "--i":
+            Console.WriteLine("Usage: mwlathe.exe --i <arguments> <input.esm/esp> <output.esm/esp> <ID map file>");
+            Console.WriteLine("For ID map: <old ID>,<new ID>");
+            Console.WriteLine("Make sure ID map is headerless and without quotes!");
+            Console.WriteLine("-s <separator> | Set custom separator for ID map. Mandatory for non-csv/tsv files");
+            Console.WriteLine("-b | Replace IDs within book texts. Useful for ex. PositionCell markers, but unsafe with plaintext IDs");
+            Console.WriteLine("-p <changelog file> | Print a list of all affected records to changelog file in tab-separated format");
+            break;
+        case "--c":
+            Console.WriteLine("Usage: mwlathe.exe --c <arguments> <input.esm/esp> <output.esm/esp> <cell name map file>");
+            Console.WriteLine("For cell name map: <old name>,<new name>");
+            Console.WriteLine("Make sure cell name map is headerless and without quotes!");
+            Console.WriteLine("-s <separator> | Set custom separator for cell name map. Mandatory for non-csv/tsv files");
+            Console.WriteLine("-b | Replace cell names within book texts");
+            Console.WriteLine("-d | Replace cell names within dialogue text");
+            Console.WriteLine("-m | Enable partial matching. Ex. changing \"Vivec\" to \"Vivace\" will also update \"Vivec, Arena\"");
+            Console.WriteLine("-p <changelog file> | Print a list of all affected records to changelog file in tab-separated format");
+            break;
+        default:
+            Console.WriteLine($"Unknown mode \"{mode}\"");
+            Console.WriteLine();
+            ShowGenericHelp();
+            break;
+    }
 }
 
 static Record IdentifyRecord(string recordType)

@@ -30,11 +30,11 @@ namespace MWLathe.Helpers
         public bool Updated { get; set; } = false;
 
         [return: NotNullIfNotNull(nameof(field))]
-        public string? ReplaceID(string? field, string oldID, string newID)
+        public string? ReplaceField(string? field, string oldValue, string newValue)
         {
-            if (field is not null && field.Equals(oldID, StringComparison.OrdinalIgnoreCase))
+            if (field is not null && field.Equals(oldValue, StringComparison.OrdinalIgnoreCase))
             {
-                field = newID;
+                field = newValue;
                 Updated = true;
             }
             return field;
@@ -42,13 +42,18 @@ namespace MWLathe.Helpers
 
         public void UpdateID(string oldID, string newID)
         {
-            ObjectID = ReplaceID(ObjectID, oldID, newID);
-            NPCID = ReplaceID(NPCID, oldID, newID);
-            OwnershipGlobal = ReplaceID(OwnershipGlobal, oldID, newID);
-            FactionID = ReplaceID(FactionID, oldID, newID);
-            Soul = ReplaceID(Soul, oldID, newID);
-            KeyName = ReplaceID(KeyName, oldID, newID);
-            TrapName = ReplaceID(TrapName, oldID, newID);
+            ObjectID = ReplaceField(ObjectID, oldID, newID);
+            NPCID = ReplaceField(NPCID, oldID, newID);
+            OwnershipGlobal = ReplaceField(OwnershipGlobal, oldID, newID);
+            FactionID = ReplaceField(FactionID, oldID, newID);
+            Soul = ReplaceField(Soul, oldID, newID);
+            KeyName = ReplaceField(KeyName, oldID, newID);
+            TrapName = ReplaceField(TrapName, oldID, newID);
+        }
+
+        public void UpdateCell(string oldCell, string newCell)
+        {
+            Destinations.ForEach(x => x.Cell = ReplaceField(x.Cell, oldCell, newCell));
         }
 
         public uint GetByteSize()

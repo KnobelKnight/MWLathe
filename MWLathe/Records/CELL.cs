@@ -1,4 +1,5 @@
 ﻿using MWLathe.Helpers;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace MWLathe.Records
@@ -307,6 +308,36 @@ namespace MWLathe.Records
             foreach (var temporaryChild in TemporaryChildren)
             {
                 temporaryChild.UpdateID(oldID, newID);
+                if (temporaryChild.Updated)
+                {
+                    Updated = true;
+                }
+            }
+        }
+
+        public override void UpdateCell(string oldCell, string newCell)
+        {
+            NAME = ReplaceField(NAME, oldCell, newCell);
+            foreach (var movedReference in MovedReferences.Where(x => x.FormMoved is not null))
+            {
+                movedReference.CellName = ReplaceField(movedReference.CellName, oldCell, newCell);
+                movedReference.FormMoved.UpdateCell(oldCell, newCell);
+                if (movedReference.FormMoved.Updated)
+                {
+                    Updated = true;
+                }
+            }
+            foreach (var persistentChild in PersistentChildren)
+            {
+                persistentChild.UpdateCell(oldCell, newCell);
+                if (persistentChild.Updated)
+                {
+                    Updated = true;
+                }
+            }
+            foreach (var temporaryChild in TemporaryChildren)
+            {
+                temporaryChild.UpdateCell(oldCell, newCell);
                 if (temporaryChild.Updated)
                 {
                     Updated = true;

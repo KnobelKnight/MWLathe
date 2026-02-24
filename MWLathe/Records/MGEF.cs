@@ -104,10 +104,14 @@ namespace MWLathe.Records
 
         public override void UpdateID(string oldID, string newID)
         {
-            BSND = ReplaceID(BSND, oldID, newID);
-            CSND = ReplaceID(CSND, oldID, newID);
-            HSND = ReplaceID(HSND, oldID, newID);
-            ASND = ReplaceID(ASND, oldID, newID);
+            BSND = ReplaceField(BSND, oldID, newID);
+            CSND = ReplaceField(CSND, oldID, newID);
+            HSND = ReplaceField(HSND, oldID, newID);
+            ASND = ReplaceField(ASND, oldID, newID);
+        }
+
+        public override void UpdateCell(string oldCell, string newCell)
+        {
         }
 
         public override void CalculateRecordSize()

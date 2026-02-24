@@ -68,7 +68,7 @@ namespace MWLathe.Records
 
         public override void UpdateID(string oldID, string newID)
         {
-            SCHD.Name = ReplaceID(SCHD.Name, oldID, newID);
+            SCHD.Name = ReplaceField(SCHD.Name, oldID, newID);
             if (SCTX is not null)
             {
                 var originalScriptText = SCTX;
@@ -78,6 +78,13 @@ namespace MWLathe.Records
                     Updated = true;
                 }
             }
+        }
+
+        public override void UpdateCell(string oldCell, string newCell)
+        {
+            // TODO: making this work with exact matching will be tricky
+            // TODO: addtopic "place name" is a problem. Will probably need to specifically check for functions:
+            // AIEscortCell, AIFollowCell, GetPCCell, PlaceItemCell, PositionCell, ShowMap
         }
 
         public override void CalculateRecordSize()

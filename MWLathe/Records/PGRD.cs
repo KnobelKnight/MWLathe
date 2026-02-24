@@ -77,6 +77,11 @@ namespace MWLathe.Records
         {
         }
 
+        public override void UpdateCell(string oldCell, string newCell)
+        {
+            NAME = ReplaceField(NAME, oldCell, newCell);
+        }
+
         public override void CalculateRecordSize()
         {
             base.CalculateRecordSize();

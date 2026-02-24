@@ -220,8 +220,8 @@ namespace MWLathe.Records
                 NAME = newID;
                 Updated = true;
             }
-            CNAM = ReplaceID(CNAM, oldID, newID);
-            SCRI = ReplaceID(SCRI, oldID, newID);
+            CNAM = ReplaceField(CNAM, oldID, newID);
+            SCRI = ReplaceField(SCRI, oldID, newID);
             foreach (var item in Items.Where(x => x.ID.Equals(oldID, StringComparison.OrdinalIgnoreCase)))
             {
                 item.ID = newID;
@@ -240,6 +240,16 @@ namespace MWLathe.Records
                 {
                     Updated = true;
                 }
+            }
+        }
+
+        public override void UpdateCell(string oldCell, string newCell)
+        {
+            Destinations.ForEach(x => x.Cell = ReplaceField(x.Cell, oldCell, newCell));
+            foreach (var aiPackage in AIPackages.OfType<AILocationPackage>().Where(x => x.Cell is not null && x.Cell.Equals(oldCell, StringComparison.OrdinalIgnoreCase)))
+            {
+                aiPackage.Cell = newCell;
+                Updated = true;
             }
         }
 

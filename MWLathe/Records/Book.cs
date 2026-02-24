@@ -78,8 +78,8 @@ namespace MWLathe.Records
 
         public override void UpdateID(string oldID, string newID)
         {
-            NAME = ReplaceID(NAME, oldID, newID);
-            SCRI = ReplaceID(SCRI, oldID, newID);
+            NAME = ReplaceField(NAME, oldID, newID);
+            SCRI = ReplaceField(SCRI, oldID, newID);
             if (replaceBookText && TEXT is not null)
             {
                 string originalText = TEXT;
@@ -89,7 +89,21 @@ namespace MWLathe.Records
                     Updated = true;
                 }
             }
-            ENAM = ReplaceID(ENAM, oldID, newID);
+            ENAM = ReplaceField(ENAM, oldID, newID);
+        }
+
+        public override void UpdateCell(string oldCell, string newCell)
+        {
+            // TODO: test this
+            if (replaceBookText && TEXT is not null)
+            {
+                string originalText = TEXT;
+                TEXT = Regex.Replace(TEXT, $"""\b{oldCell}\b""", newCell, RegexOptions.IgnoreCase);
+                if (originalText != TEXT)
+                {
+                    Updated = true;
+                }
+            }
         }
 
         public override void CalculateRecordSize()

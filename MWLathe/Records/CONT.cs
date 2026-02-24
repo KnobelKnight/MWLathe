@@ -85,7 +85,11 @@ namespace MWLathe.Records
                 item.ID = newID;
                 Updated = true;
             }
-            SCRI = ReplaceID(SCRI, oldID, newID);
+            SCRI = ReplaceField(SCRI, oldID, newID);
+        }
+
+        public override void UpdateCell(string oldCell, string newCell)
+        {
         }
 
         public override void CalculateRecordSize()
